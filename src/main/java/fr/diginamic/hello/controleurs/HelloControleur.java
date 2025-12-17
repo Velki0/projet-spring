@@ -15,7 +15,9 @@ public class HelloControleur {
 
     @GetMapping
     public String direHello(){
+
         return helloService.envoyerSalutation();
+
     }
 
 }
