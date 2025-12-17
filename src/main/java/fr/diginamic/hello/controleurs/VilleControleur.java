@@ -69,16 +69,16 @@ public class VilleControleur {
 
     }
 
-    @PutMapping
-    public ResponseEntity<String> updateVille(@RequestBody Ville ville) {
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<String> updateVille(@PathVariable int id, @RequestBody Ville ville) {
 
-        Optional<Ville> villeEnBase = listeVilles.stream().filter(v -> v.getNom().equals(ville.getNom())).findFirst();
+        Optional<Ville> villeEnBase = listeVilles.stream().filter(v -> v.getId() == id).findFirst();
         if(villeEnBase.isPresent()) {
             villeEnBase.get().setNom(ville.getNom());
             villeEnBase.get().setPopulation(ville.getPopulation());
             return ResponseEntity.ok("La ville de " + ville.getNom() + " a bien été modifiée.");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La ville de : " + ville.getNom() + " n'est pas présente. Impossible de la modifier.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La ville avec l'id : " + id + " n'est pas présente. Impossible de la modifier.");
         }
 
     }
