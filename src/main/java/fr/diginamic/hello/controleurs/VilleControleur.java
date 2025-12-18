@@ -1,9 +1,16 @@
 package fr.diginamic.hello.controleurs;
 
 import fr.diginamic.hello.entites.Ville;
+import fr.diginamic.hello.exceptions.VilleException;
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,6 +29,8 @@ import java.util.Set;
 @RequestMapping(path = "/villes")
 public class VilleControleur {
 
+    @Autowired
+    private Validator validator;
     private static final Set<Ville> listeVilles = new HashSet<>();
 
     @PostConstruct
@@ -45,32 +55,43 @@ public class VilleControleur {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<String> getVilleById(@PathVariable int id) {
+    public ResponseEntity<String> getVilleById(@PathVariable int id) throws VilleException {
 
         Optional<Ville> villeEnBase = listeVilles.stream().filter(v -> v.getId() == id).findFirst();
         if (villeEnBase.isPresent()) {
             return ResponseEntity.ok("Voici la ville demandée : " + villeEnBase.get());
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La ville avec l'id : " + id + " n'est pas présente.");
+            throw new VilleException("La ville avec l'id : " + id + " n'est pas présente.");
         }
 
     }
 
     @PostMapping
-    public ResponseEntity<String> addVille(@RequestBody Ville ville) {
+    public ResponseEntity<String> addVille(@Valid @RequestBody Ville ville, BindingResult resultat) throws VilleException {
+
+        if (resultat.hasErrors()) {
+            List<FieldError> errors = resultat.getFieldErrors();
+            throw new VilleException(errors.getFirst().getField() + " " + errors.getFirst().getDefaultMessage());
+        }
 
         Optional<Ville> villeEnBase = listeVilles.stream().filter(v -> v.getNom().equals(ville.getNom())).findFirst();
         if(villeEnBase.isEmpty()) {
             listeVilles.add(ville);
             return ResponseEntity.status(HttpStatus.CREATED).body("La ville de : " + ville.getNom() + " a été créée avec succès.");
         } else {
-            return ResponseEntity.badRequest().body("La ville de : " + ville.getNom() + " existe déjà.");
+            throw new VilleException("La ville de : " + ville.getNom() + " existe déjà.");
         }
 
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<String> updateVille(@PathVariable int id, @RequestBody Ville ville) {
+    public ResponseEntity<String> updateVille(@PathVariable int id, @RequestBody Ville ville) throws VilleException {
+
+        Errors resultat = validator.validateObject(ville);
+        if (resultat.hasErrors()) {
+            List<FieldError> errors = resultat.getFieldErrors();
+            throw new VilleException(errors.getFirst().getField() + " " + errors.getFirst().getDefaultMessage());
+        }
 
         Optional<Ville> villeEnBase = listeVilles.stream().filter(v -> v.getId() == id).findFirst();
         if(villeEnBase.isPresent()) {
@@ -78,20 +99,20 @@ public class VilleControleur {
             villeEnBase.get().setPopulation(ville.getPopulation());
             return ResponseEntity.ok("La ville de " + ville.getNom() + " a bien été modifiée.");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La ville avec l'id : " + id + " n'est pas présente. Impossible de la modifier.");
+            throw new VilleException("La ville avec l'id : " + id + " n'est pas présente. Impossible de la modifier.");
         }
 
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<String> deleteVille(@PathVariable int id) {
+    public ResponseEntity<String> deleteVille(@PathVariable int id) throws VilleException {
 
         Optional<Ville> villeEnBase = listeVilles.stream().filter(v -> v.getId() == id).findFirst();
         if(villeEnBase.isPresent()) {
             listeVilles.remove(villeEnBase.get());
             return ResponseEntity.ok("La ville de " + villeEnBase.get().getNom() + " a bien été supprimée.");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La ville avec l'id : " + id + " n'est pas présente. Impossible de la supprimer.");
+            throw new VilleException("La ville avec l'id : " + id + " n'est pas présente. Impossible de la supprimer.");
         }
 
     }
