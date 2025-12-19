@@ -2,12 +2,10 @@ package fr.diginamic.hello.controleurs;
 
 import fr.diginamic.hello.entites.Ville;
 import fr.diginamic.hello.exceptions.VilleException;
-import jakarta.annotation.PostConstruct;
-import jakarta.validation.Valid;
+import fr.diginamic.hello.services.VilleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
@@ -20,10 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/villes")
@@ -31,56 +27,44 @@ public class VilleControleur {
 
     @Autowired
     private Validator validator;
-    private static final Set<Ville> listeVilles = new HashSet<>();
-
-    @PostConstruct
-    public void initData() {
-
-        listeVilles.add(new Ville("Nice", 343_000));
-        listeVilles.add(new Ville("Carcassonne", 47_800));
-        listeVilles.add(new Ville("Narbonne", 53_400));
-        listeVilles.add(new Ville("Lyon", 484_000));
-        listeVilles.add(new Ville("Foix", 9_700));
-        listeVilles.add(new Ville("Pau", 77_200));
-        listeVilles.add(new Ville("Marseille", 850_700));
-        listeVilles.add(new Ville("Tarbes", 40_600));
-
-    }
+    @Autowired
+    private VilleService villeService;
 
     @GetMapping
-    public ResponseEntity<Set<Ville>> getVilles() {
+    public ResponseEntity<List<Ville>> getVilles() {
 
-        return ResponseEntity.ok(listeVilles);
+        List<Ville> villes = villeService.getAllVille();
+        return ResponseEntity.ok(villes);
 
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<String> getVilleById(@PathVariable int id) throws VilleException {
 
-        Optional<Ville> villeEnBase = listeVilles.stream().filter(v -> v.getId() == id).findFirst();
-        if (villeEnBase.isPresent()) {
-            return ResponseEntity.ok("Voici la ville demandée : " + villeEnBase.get());
-        } else {
-            throw new VilleException("La ville avec l'id : " + id + " n'est pas présente.");
-        }
+        Ville ville = villeService.getVilleById(id);
+        return ResponseEntity.ok("Voici la ville demandée : " + ville);
+
+    }
+
+    @GetMapping(path = "/{nom}")
+    public ResponseEntity<String> getVilles(@PathVariable String nom) throws VilleException {
+
+        Ville ville = villeService.getVilleByName(nom);
+        return ResponseEntity.ok("Voici la ville demandée : " + ville);
 
     }
 
     @PostMapping
-    public ResponseEntity<String> addVille(@Valid @RequestBody Ville ville, BindingResult resultat) throws VilleException {
+    public ResponseEntity<String> addVille(@RequestBody Ville ville) throws VilleException {
 
+        Errors resultat = validator.validateObject(ville);
         if (resultat.hasErrors()) {
             List<FieldError> errors = resultat.getFieldErrors();
-            throw new VilleException(errors.getFirst().getField() + " " + errors.getFirst().getDefaultMessage());
+            String messageErreur = errors.stream().map(e -> e.getField() + " " + e.getDefaultMessage()).collect(Collectors.joining());
+            throw new VilleException(messageErreur);
         }
-
-        Optional<Ville> villeEnBase = listeVilles.stream().filter(v -> v.getNom().equals(ville.getNom())).findFirst();
-        if(villeEnBase.isEmpty()) {
-            listeVilles.add(ville);
-            return ResponseEntity.status(HttpStatus.CREATED).body("La ville de : " + ville.getNom() + " a été créée avec succès.");
-        } else {
-            throw new VilleException("La ville de : " + ville.getNom() + " existe déjà.");
-        }
+        villeService.addVille(ville);
+        return ResponseEntity.status(HttpStatus.CREATED).body("La ville de : " + ville.getNom() + " a été créée avec succès.");
 
     }
 
@@ -90,30 +74,19 @@ public class VilleControleur {
         Errors resultat = validator.validateObject(ville);
         if (resultat.hasErrors()) {
             List<FieldError> errors = resultat.getFieldErrors();
-            throw new VilleException(errors.getFirst().getField() + " " + errors.getFirst().getDefaultMessage());
+            String messageErreur = errors.stream().map(e -> e.getField() + " " + e.getDefaultMessage()).collect(Collectors.joining());
+            throw new VilleException(messageErreur);
         }
-
-        Optional<Ville> villeEnBase = listeVilles.stream().filter(v -> v.getId() == id).findFirst();
-        if(villeEnBase.isPresent()) {
-            villeEnBase.get().setNom(ville.getNom());
-            villeEnBase.get().setPopulation(ville.getPopulation());
-            return ResponseEntity.ok("La ville de " + ville.getNom() + " a bien été modifiée.");
-        } else {
-            throw new VilleException("La ville avec l'id : " + id + " n'est pas présente. Impossible de la modifier.");
-        }
+        villeService.updateVille(id, ville);
+        return ResponseEntity.ok("La ville de " + ville.getNom() + " a bien été modifiée.");
 
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<String> deleteVille(@PathVariable int id) throws VilleException {
 
-        Optional<Ville> villeEnBase = listeVilles.stream().filter(v -> v.getId() == id).findFirst();
-        if(villeEnBase.isPresent()) {
-            listeVilles.remove(villeEnBase.get());
-            return ResponseEntity.ok("La ville de " + villeEnBase.get().getNom() + " a bien été supprimée.");
-        } else {
-            throw new VilleException("La ville avec l'id : " + id + " n'est pas présente. Impossible de la supprimer.");
-        }
+        villeService.deleteVille(id);
+        return ResponseEntity.ok("La ville avec l'id " + id + " a bien été supprimée.");
 
     }
 
