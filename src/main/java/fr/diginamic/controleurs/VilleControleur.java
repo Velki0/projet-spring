@@ -1,7 +1,11 @@
 package fr.diginamic.controleurs;
 
+import fr.diginamic.dtos.VilleDto;
+import fr.diginamic.entites.Departement;
 import fr.diginamic.entites.Ville;
+import fr.diginamic.exceptions.DepartementException;
 import fr.diginamic.exceptions.VilleException;
+import fr.diginamic.mappers.VilleMapper;
 import fr.diginamic.services.DepartementService;
 import fr.diginamic.services.VilleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +21,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,54 +38,86 @@ public class VilleControleur {
     private VilleService villeService;
     @Autowired
     private DepartementService departementService;
+    @Autowired
+    VilleMapper villeMapper;
 
     @GetMapping
-    public ResponseEntity<List<Ville>> getVilles() {
+    public ResponseEntity<List<VilleDto>> getVilles() {
 
-        List<Ville> villes = villeService.getAllVille();
-        return ResponseEntity.ok(villes);
+        List<Ville> villes = villeService.getAllVilles();
+        List<VilleDto> villesDto = villes.stream().map(v -> villeMapper.toDto(v)).toList();
+        return ResponseEntity.ok(villesDto);
 
     }
 
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<String> getVilleById(@PathVariable int id) throws VilleException {
+    @GetMapping(path = "/byId/{id}")
+    public ResponseEntity<VilleDto> getVilleById(@PathVariable int id) throws VilleException {
 
         Ville ville = villeService.getVilleById(id);
-        return ResponseEntity.ok("Voici la ville demandée : " + ville);
+        VilleDto villeDto = villeMapper.toDto(ville);
+        return ResponseEntity.ok(villeDto);
 
     }
 
-    @GetMapping(path = "/{nom}")
-    public ResponseEntity<String> getVilles(@PathVariable String nom) throws VilleException {
+    @GetMapping(path = "/byNom/{nom}")
+    public ResponseEntity<VilleDto> getVillesByNom(@PathVariable String nom) throws VilleException {
 
-        Ville ville = villeService.getVilleByName(nom);
-        return ResponseEntity.ok("Voici la ville demandée : " + ville);
+        Ville ville = villeService.getVilleByNom(nom);
+        VilleDto villeDto = villeMapper.toDto(ville);
+        return ResponseEntity.ok(villeDto);
 
+    }
+
+    @GetMapping(path = "/nLargestVilles")
+    public ResponseEntity<List<VilleDto>> getNPlusGrandesVilles(@RequestParam int n, @RequestParam String nomDptm) throws DepartementException {
+
+        Departement departement = departementService.getDepartementByNom(nomDptm);
+        return ResponseEntity.ok(
+                departement.getVilles().stream()
+                                             .sorted(Comparator.comparing(Ville::getPopulation))
+                                             .limit(n)
+                                             .map(ville -> villeMapper.toDto(ville))
+                                             .toList());
+    }
+
+    @GetMapping(path = "/villesPopBetweenFromDptm")
+    public ResponseEntity<List<VilleDto>> getVillesPopulationMinMax(@RequestParam int min, @RequestParam int max, @RequestParam String nomDptm) throws DepartementException {
+
+        Departement departement = departementService.getDepartementByNom(nomDptm);
+        return ResponseEntity.ok(
+                departement.getVilles().stream()
+                        .filter(ville -> ville.getPopulation() > min)
+                        .filter(ville -> ville.getPopulation() < max)
+                        .map(ville -> villeMapper.toDto(ville))
+                        .toList());
     }
 
     @PostMapping
-    public ResponseEntity<String> addVille(@RequestBody Ville ville) throws VilleException {
+    public ResponseEntity<String> addVille(@RequestBody VilleDto villeDto) throws VilleException {
 
-        Errors resultat = validator.validateObject(ville);
+        Errors resultat = validator.validateObject(villeDto);
         if (resultat.hasErrors()) {
             List<FieldError> errors = resultat.getFieldErrors();
-            String messageErreur = errors.stream().map(e -> e.getField() + " " + e.getDefaultMessage()).collect(Collectors.joining());
+            String messageErreur = errors.stream().map(e -> e.getField() + " " + e.getDefaultMessage() + "\n").collect(Collectors.joining());
             throw new VilleException(messageErreur);
         }
+        Ville ville = villeMapper.toEntity(villeDto);
+        ville.setDepartement(departementService.addDepartement(ville.getDepartement()));
         villeService.addVille(ville);
         return ResponseEntity.status(HttpStatus.CREATED).body("La ville de : " + ville.getNom() + " a été créée avec succès.");
 
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<String> updateVille(@PathVariable int id, @RequestBody Ville ville) throws VilleException {
+    public ResponseEntity<String> updateVille(@PathVariable int id, @RequestBody VilleDto villeDto) throws VilleException {
 
-        Errors resultat = validator.validateObject(ville);
+        Errors resultat = validator.validateObject(villeDto);
         if (resultat.hasErrors()) {
             List<FieldError> errors = resultat.getFieldErrors();
-            String messageErreur = errors.stream().map(e -> e.getField() + " " + e.getDefaultMessage()).collect(Collectors.joining());
+            String messageErreur = errors.stream().map(e -> e.getField() + " " + e.getDefaultMessage() + "\n").collect(Collectors.joining());
             throw new VilleException(messageErreur);
         }
+        Ville ville = villeMapper.toEntity(villeDto);
         ville.setDepartement(departementService.addDepartement(ville.getDepartement()));
         villeService.updateVille(id, ville);
         return ResponseEntity.ok("La ville de " + ville.getNom() + " a bien été modifiée.");

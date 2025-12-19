@@ -15,7 +15,7 @@ public class VilleDao {
     @PersistenceContext
     private EntityManager em;
 
-    public List<Ville> getAllVille() {
+    public List<Ville> getAllVilles() {
 
         TypedQuery<Ville> query = em.createQuery("FROM Ville", Ville.class);
         return query.getResultList();
@@ -32,7 +32,7 @@ public class VilleDao {
 
     }
 
-    public Ville getVilleByName(String nom) throws VilleException {
+    public Ville getVilleByNom(String nom) throws VilleException {
 
         try {
             return em.createQuery("FROM Ville v WHERE v.nom = :nom", Ville.class).setParameter("nom", nom).getSingleResult();

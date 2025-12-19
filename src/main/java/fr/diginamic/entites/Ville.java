@@ -7,9 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 @Entity
 public class Ville {
@@ -20,12 +17,9 @@ public class Ville {
     private int id;
 
     @Column(name = "NOM", unique = true, nullable = false)
-    @NotNull
-    @Size(min = 2, message = "de la ville doit avoir un nom contenant au moins 2 lettres.")
     private String nom;
 
     @Column(name = "POPULATION")
-    @Min(value = 10, message = "de la ville doit avoir au moins 10 habitants.")
     private int population;
 
     @ManyToOne
@@ -54,7 +48,7 @@ public class Ville {
     @Override
     public String toString() {
 
-        return "{" +id + ", " + nom + ", " + population + "}";
+        return "{" +id + ", " + nom + ", " + population + ", " + departement.getCodeDepartement() + ", " + departement.getNom() + "}";
 
     }
 

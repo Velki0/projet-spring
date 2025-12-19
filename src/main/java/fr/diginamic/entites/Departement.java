@@ -1,6 +1,5 @@
 package fr.diginamic.entites;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,8 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Departement {
@@ -25,9 +24,8 @@ public class Departement {
     @Column(name = "NOM", unique = true, nullable = false)
     private String nom;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "departement")
-    private List<Ville> villes = new ArrayList<>();
+    private Set<Ville> villes = new HashSet<>();
 
     public Departement() {}
 
@@ -41,6 +39,10 @@ public class Departement {
     public int getId() { return id; }
     public String getCodeDepartement() { return codeDepartement; }
     public String getNom() { return nom; }
-    public List<Ville> getVilles() { return villes; }
+    public Set<Ville> getVilles() { return villes; }
+
+    public void setCodeDepartement(String codeDepartement) { this.codeDepartement = codeDepartement; }
+    public void setNom(String nom) { this.nom = nom; }
+    public void setVilles(Set<Ville> villes) { this.villes = villes; }
 
 }

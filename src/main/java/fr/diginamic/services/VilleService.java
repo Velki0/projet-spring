@@ -15,9 +15,9 @@ public class VilleService {
     @Autowired
     private VilleDao villeDao;
 
-    public List<Ville> getAllVille(){
+    public List<Ville> getAllVilles(){
 
-        return villeDao.getAllVille();
+        return villeDao.getAllVilles();
 
     }
 
@@ -27,9 +27,9 @@ public class VilleService {
 
     }
 
-    public Ville getVilleByName(String nom) throws VilleException {
+    public Ville getVilleByNom(String nom) throws VilleException {
 
-        return villeDao.getVilleByName(nom);
+        return villeDao.getVilleByNom(nom);
 
     }
 
@@ -37,7 +37,7 @@ public class VilleService {
     public void addVille(Ville ville) {
 
         try {
-            villeDao.getVilleByName(ville.getNom());
+            villeDao.getVilleByNom(ville.getNom());
         } catch (VilleException e) {
             villeDao.addVille(ville);
         }

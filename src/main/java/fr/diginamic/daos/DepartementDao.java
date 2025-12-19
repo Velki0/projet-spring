@@ -22,12 +22,22 @@ public class DepartementDao {
 
     }
 
+    public Departement getDepartementById(int id) throws DepartementException {
+
+        try {
+            return em.find(Departement.class, id);
+        } catch (Exception ex) {
+            throw new DepartementException("Le département avec le nom " + id + " n'existe pas en base de données. Impossible de le modifier.");
+        }
+
+    }
+
     public Departement getDepartementByNom(String nom) throws DepartementException {
 
         try {
             return em.createQuery("FROM Departement d WHERE d.nom = :nom", Departement.class).setParameter("nom", nom).getSingleResult();
         } catch (Exception ex) {
-            throw new DepartementException("Le département avec le nom " + nom + "n'existe pas en base de données. Impossible de le modifier.");
+            throw new DepartementException("Le département avec le nom " + nom + " n'existe pas en base de données. Impossible de le modifier.");
         }
 
     }
@@ -43,6 +53,5 @@ public class DepartementDao {
         em.remove(departement);
 
     }
-
 
 }

@@ -21,7 +21,13 @@ public class DepartementService {
 
     }
 
-    public Departement getDepartementByName(String name) throws DepartementException {
+    public Departement getDepartementById(int id) throws DepartementException {
+
+        return departementDao.getDepartementById(id);
+
+    }
+
+    public Departement getDepartementByNom(String name) throws DepartementException {
 
         return departementDao.getDepartementByNom(name);
 
@@ -40,9 +46,19 @@ public class DepartementService {
     }
 
     @Transactional
-    public void deleteDepartement(Departement departement) throws DepartementException {
+    public void updateDepartement(int id, Departement departement) throws DepartementException {
 
-        Departement departementEnBase = departementDao.getDepartementByNom(departement.getNom());
+        Departement departementEnBase = departementDao.getDepartementById(id);
+        departementEnBase.setCodeDepartement(departement.getCodeDepartement());
+        departementEnBase.setNom(departement.getNom());
+        departementEnBase.setVilles(departement.getVilles());
+
+    }
+
+    @Transactional
+    public void deleteDepartement(int id) throws DepartementException {
+
+        Departement departementEnBase = departementDao.getDepartementById(id);
         departementDao.deleteDepartement(departementEnBase);
 
     }
