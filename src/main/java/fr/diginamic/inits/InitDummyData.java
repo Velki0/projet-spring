@@ -1,4 +1,4 @@
-package fr.diginamic.initializations;
+package fr.diginamic.inits;
 
 import fr.diginamic.services.DummyDataService;
 import org.springframework.beans.factory.annotation.Autowired;
