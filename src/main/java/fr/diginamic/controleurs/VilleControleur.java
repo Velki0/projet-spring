@@ -68,7 +68,7 @@ public class VilleControleur {
 
     }
 
-    @GetMapping(path = "/nLargestVilles")
+    @GetMapping(path = "/nLargestVillesFromDptm")
     public ResponseEntity<List<VilleDto>> getNPlusGrandesVilles(@RequestParam int n, @RequestParam String nomDptm) throws DepartementException {
 
         Departement departement = departementService.getDepartementByNom(nomDptm);
@@ -86,10 +86,10 @@ public class VilleControleur {
         Departement departement = departementService.getDepartementByNom(nomDptm);
         return ResponseEntity.ok(
                 departement.getVilles().stream()
-                        .filter(ville -> ville.getPopulation() > min)
-                        .filter(ville -> ville.getPopulation() < max)
-                        .map(ville -> villeMapper.toDto(ville))
-                        .toList());
+                                             .filter(ville -> ville.getPopulation() > min)
+                                             .filter(ville -> ville.getPopulation() < max)
+                                             .map(ville -> villeMapper.toDto(ville))
+                                             .toList());
     }
 
     @PostMapping
