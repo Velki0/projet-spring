@@ -1,4 +1,4 @@
-package fr.diginamic.hello;
+package fr.diginamic;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

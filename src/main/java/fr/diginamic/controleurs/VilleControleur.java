@@ -1,8 +1,9 @@
-package fr.diginamic.hello.controleurs;
+package fr.diginamic.controleurs;
 
-import fr.diginamic.hello.entites.Ville;
-import fr.diginamic.hello.exceptions.VilleException;
-import fr.diginamic.hello.services.VilleService;
+import fr.diginamic.entites.Ville;
+import fr.diginamic.exceptions.VilleException;
+import fr.diginamic.services.DepartementService;
+import fr.diginamic.services.VilleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,8 @@ public class VilleControleur {
     private Validator validator;
     @Autowired
     private VilleService villeService;
+    @Autowired
+    private DepartementService departementService;
 
     @GetMapping
     public ResponseEntity<List<Ville>> getVilles() {
@@ -77,6 +80,7 @@ public class VilleControleur {
             String messageErreur = errors.stream().map(e -> e.getField() + " " + e.getDefaultMessage()).collect(Collectors.joining());
             throw new VilleException(messageErreur);
         }
+        ville.setDepartement(departementService.addDepartement(ville.getDepartement()));
         villeService.updateVille(id, ville);
         return ResponseEntity.ok("La ville de " + ville.getNom() + " a bien été modifiée.");
 

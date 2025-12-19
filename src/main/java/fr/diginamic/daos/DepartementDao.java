@@ -1,7 +1,7 @@
-package fr.diginamic.hello.daos;
+package fr.diginamic.daos;
 
-import fr.diginamic.hello.entites.Departement;
-import fr.diginamic.hello.exceptions.DepartementException;
+import fr.diginamic.entites.Departement;
+import fr.diginamic.exceptions.DepartementException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;

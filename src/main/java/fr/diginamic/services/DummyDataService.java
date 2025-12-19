@@ -1,9 +1,7 @@
-package fr.diginamic.hello.dummydatas;
+package fr.diginamic.services;
 
-import fr.diginamic.hello.entites.Departement;
-import fr.diginamic.hello.entites.Ville;
-import fr.diginamic.hello.services.DepartementService;
-import fr.diginamic.hello.services.VilleService;
+import fr.diginamic.entites.Departement;
+import fr.diginamic.entites.Ville;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class InsertionDummyData {
+public class DummyDataService {
 
     @Autowired
     private VilleService villeService;
@@ -29,6 +27,7 @@ public class InsertionDummyData {
         villes.add(new Ville("Marseille", 850_700, new Departement("13", "Bouches-du-Rhône")));
         villes.add(new Ville("Tarbes", 40_600, new Departement("65", "Hautes-Pyrénées")));
 
+        // Insertion en base de données.
         villes.forEach(ville -> ville.setDepartement(departementService.addDepartement(ville.getDepartement())));
         villes.forEach(villeService::addVille);
 

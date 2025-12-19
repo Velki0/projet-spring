@@ -1,8 +1,8 @@
-package fr.diginamic.hello.services;
+package fr.diginamic.services;
 
-import fr.diginamic.hello.daos.DepartementDao;
-import fr.diginamic.hello.entites.Departement;
-import fr.diginamic.hello.exceptions.DepartementException;
+import fr.diginamic.daos.DepartementDao;
+import fr.diginamic.entites.Departement;
+import fr.diginamic.exceptions.DepartementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

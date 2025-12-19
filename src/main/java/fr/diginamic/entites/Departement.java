@@ -1,4 +1,4 @@
-package fr.diginamic.hello.entites;
+package fr.diginamic.entites;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;

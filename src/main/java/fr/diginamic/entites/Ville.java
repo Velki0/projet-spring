@@ -1,4 +1,4 @@
-package fr.diginamic.hello.entites;
+package fr.diginamic.entites;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,8 +1,8 @@
-package fr.diginamic.hello.services;
+package fr.diginamic.services;
 
-import fr.diginamic.hello.daos.VilleDao;
-import fr.diginamic.hello.entites.Ville;
-import fr.diginamic.hello.exceptions.VilleException;
+import fr.diginamic.daos.VilleDao;
+import fr.diginamic.entites.Ville;
+import fr.diginamic.exceptions.VilleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +50,7 @@ public class VilleService {
         Ville villeEnBase = villeDao.getVilleById(id);
         villeEnBase.setNom(ville.getNom());
         villeEnBase.setPopulation(ville.getPopulation());
+        villeEnBase.setDepartement(ville.getDepartement());
 
     }
 

@@ -1,4 +1,4 @@
-package fr.diginamic.hello.exceptions;
+package fr.diginamic.exceptions;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
