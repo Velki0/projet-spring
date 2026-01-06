@@ -21,7 +21,7 @@ public class Departement {
     @Column(name = "CODE_DEPARTEMENT", unique = true, nullable = false)
     private String codeDepartement;
 
-    @Column(name = "NOM", unique = true, nullable = false)
+    @Column(name = "NOM")
     private String nom;
 
     @OneToMany(mappedBy = "departement")

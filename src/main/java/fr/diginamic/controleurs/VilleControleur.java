@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,18 +68,14 @@ public class VilleControleur {
     }
 
     @GetMapping(path = "/nLargestVillesFromDptm")
-    public ResponseEntity<List<VilleDto>> getNPlusGrandesVilles(@RequestParam int n, @RequestParam String nomDptm) throws DepartementException {
+    public ResponseEntity<List<VilleDto>> getNPlusGrandesVilles(@RequestParam int top, @RequestParam String codeDptm) throws VilleException {
 
-        Departement departement = departementService.getDepartementByNom(nomDptm);
-        return ResponseEntity.ok(
-                departement.getVilles().stream()
-                                             .sorted(Comparator.comparing(Ville::getPopulation))
-                                             .limit(n)
-                                             .map(ville -> villeMapper.toDto(ville))
-                                             .toList());
+        List<Ville> villesDB = villeService.getVillesNPlusPeupleesFromDepartement(top, codeDptm);
+        return ResponseEntity.ok(villesDB.stream().map(v -> villeMapper.toDto(v)).toList());
 
     }
 
+    // TODO
     @GetMapping(path = "/villesPopBetweenFromDptm")
     public ResponseEntity<List<VilleDto>> getVillesPopulationMinMax(@RequestParam int min, @RequestParam int max, @RequestParam String nomDptm) throws DepartementException {
 

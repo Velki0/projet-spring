@@ -16,7 +16,7 @@ public class Ville {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "NOM", unique = true, nullable = false)
+    @Column(name = "NOM")
     private String nom;
 
     @Column(name = "POPULATION")

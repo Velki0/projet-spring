@@ -2,6 +2,7 @@ package fr.diginamic.services;
 
 import fr.diginamic.entites.Departement;
 import fr.diginamic.entites.Ville;
+import fr.diginamic.exceptions.VilleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,11 @@ public class DummyDataService {
 
         // Insertion en base de données.
         villes.forEach(ville -> ville.setDepartement(departementService.addDepartement(ville.getDepartement())));
-        villes.forEach(villeService::addVille);
+        villes.forEach(v -> {
+            try {
+                villeService.addVille(v);
+            } catch (VilleException ignored) {}
+        });
 
     }
 

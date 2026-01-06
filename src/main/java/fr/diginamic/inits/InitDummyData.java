@@ -15,7 +15,7 @@ public class InitDummyData implements ApplicationListener<ContextRefreshedEvent>
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
-        dummyData.insererQuelquesVillesEtDepartements();
+        // dummyData.insererQuelquesVillesEtDepartements();
 
     }
 
