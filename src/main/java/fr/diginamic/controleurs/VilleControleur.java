@@ -39,7 +39,7 @@ public class VilleControleur {
     @Autowired
     private DepartementService departementService;
     @Autowired
-    VilleMapper villeMapper;
+    private VilleMapper villeMapper;
 
     @GetMapping
     public ResponseEntity<List<VilleDto>> getVilles() {
