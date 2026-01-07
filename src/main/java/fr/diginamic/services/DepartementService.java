@@ -10,11 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class DepartementService {
+public class DepartementService implements IDepartementService {
 
     @Autowired
     private DepartementRepository departementRepository;
 
+    @Override
     public Page<Departement> getAllDepartements(Integer page, Integer taille){
 
         if (page == null){ page = 0; }
@@ -24,6 +25,7 @@ public class DepartementService {
 
     }
 
+    @Override
     public Departement getDepartementById(int id) throws DepartementException {
 
         Departement departementDB = departementRepository.findById(id);
@@ -35,6 +37,7 @@ public class DepartementService {
 
     }
 
+    @Override
     public Departement getDepartementByNom(String nom) throws DepartementException {
 
         Departement departementDB = departementRepository.findByNom(nom);
@@ -46,6 +49,7 @@ public class DepartementService {
 
     }
 
+    @Override
     public Departement getDepartementByCode(String codeDptm) throws DepartementException {
 
         Departement departementDB = departementRepository.findByCodeDepartement(codeDptm);
@@ -58,6 +62,7 @@ public class DepartementService {
     }
 
     @Transactional
+    @Override
     public Departement addDepartementDeVille(Departement departement) {
 
         Departement departementDB = departementRepository.findByCodeDepartement(departement.getCodeDepartement());
@@ -71,6 +76,7 @@ public class DepartementService {
     }
 
     @Transactional
+    @Override
     public void addDepartement(Departement departement) throws DepartementException {
 
         Departement departementDB = departementRepository.findByCodeDepartement(departement.getCodeDepartement());
@@ -83,6 +89,7 @@ public class DepartementService {
     }
 
     @Transactional
+    @Override
     public void updateDepartement(int id, Departement departement) throws DepartementException {
 
         Departement departementDB = departementRepository.findById(id);
@@ -97,6 +104,7 @@ public class DepartementService {
     }
 
     @Transactional
+    @Override
     public void deleteDepartement(int id) throws DepartementException {
 
         Departement departementDB = departementRepository.findById(id);

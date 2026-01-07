@@ -8,21 +8,23 @@ import org.springframework.stereotype.Component;
 import java.util.stream.Collectors;
 
 @Component
-public class DepartementMapper {
+public class DepartementMapper implements IDepartementMapper {
 
     @Autowired
-    private VilleMapper villeMapper;
+    private IVilleMapper IVilleMapper;
 
+    @Override
     public DepartementDto toDto(Departement departement) {
 
         return new DepartementDto(departement.getId(),
                 departement.getCodeDepartement(),
                 departement.getNom(),
-                departement.getVilles().stream().map(ville -> villeMapper.toDto(ville)).collect(Collectors.toSet())
+                departement.getVilles().stream().map(ville -> IVilleMapper.toDto(ville)).collect(Collectors.toSet())
         );
 
     }
 
+    @Override
     public Departement toEntity(DepartementDto departementDto) {
 
         return new Departement(departementDto.getCodeDepartement(), departementDto.getNomDepartement());

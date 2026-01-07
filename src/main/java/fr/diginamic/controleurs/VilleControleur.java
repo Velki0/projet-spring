@@ -3,9 +3,9 @@ package fr.diginamic.controleurs;
 import fr.diginamic.dtos.VilleDto;
 import fr.diginamic.entites.Ville;
 import fr.diginamic.exceptions.VilleException;
-import fr.diginamic.mappers.VilleMapper;
-import fr.diginamic.services.DepartementService;
-import fr.diginamic.services.VilleService;
+import fr.diginamic.mappers.IVilleMapper;
+import fr.diginamic.services.IDepartementService;
+import fr.diginamic.services.IVilleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -33,11 +33,11 @@ public class VilleControleur implements IVilleControleur {
     @Autowired
     private Validator validator;
     @Autowired
-    private VilleService villeService;
+    private IVilleService villeService;
     @Autowired
-    private DepartementService departementService;
+    private IDepartementService departementService;
     @Autowired
-    private VilleMapper villeMapper;
+    private IVilleMapper villeMapper;
 
     @GetMapping
     @Override

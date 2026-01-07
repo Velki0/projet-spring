@@ -13,9 +13,9 @@ import java.util.List;
 public class DummyDataService {
 
     @Autowired
-    private VilleService villeService;
+    private IVilleService villeService;
     @Autowired
-    private DepartementService departementService;
+    private IDepartementService departementService;
 
     public void insererQuelquesVillesEtDepartements() {
 
@@ -37,6 +37,5 @@ public class DummyDataService {
         });
 
     }
-
 
 }

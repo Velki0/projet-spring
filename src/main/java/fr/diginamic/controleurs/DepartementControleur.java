@@ -5,9 +5,9 @@ import fr.diginamic.entites.Departement;
 import fr.diginamic.entites.Ville;
 import fr.diginamic.exceptions.DepartementException;
 import fr.diginamic.exceptions.VilleException;
-import fr.diginamic.mappers.DepartementMapper;
-import fr.diginamic.services.DepartementService;
-import fr.diginamic.services.VilleService;
+import fr.diginamic.mappers.IDepartementMapper;
+import fr.diginamic.services.IDepartementService;
+import fr.diginamic.services.IVilleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -35,11 +35,11 @@ public class DepartementControleur implements IDepartementControleur {
     @Autowired
     private Validator validator;
     @Autowired
-    private VilleService villeService;
+    private IVilleService villeService;
     @Autowired
-    private DepartementService departementService;
+    private IDepartementService departementService;
     @Autowired
-    private DepartementMapper departementMapper;
+    private IDepartementMapper departementMapper;
 
     @GetMapping
     @Override

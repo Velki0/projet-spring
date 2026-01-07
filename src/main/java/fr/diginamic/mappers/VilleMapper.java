@@ -6,8 +6,9 @@ import fr.diginamic.entites.Ville;
 import org.springframework.stereotype.Component;
 
 @Component
-public class VilleMapper {
+public class VilleMapper implements IVilleMapper {
 
+    @Override
     public VilleDto toDto(Ville ville) {
 
         return new VilleDto(ville.getId(),
@@ -19,6 +20,7 @@ public class VilleMapper {
 
     }
 
+    @Override
     public Ville toEntity(VilleDto villeDto) {
 
         return new Ville(villeDto.getNom(),

@@ -12,11 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class VilleService {
+public class VilleService implements IVilleService {
 
     @Autowired
     private VilleRepository villeRepository;
 
+    @Override
     public Page<Ville> getAllVilles(Integer page, Integer taille) {
 
         if (page == null){ page = 0; }
@@ -26,6 +27,7 @@ public class VilleService {
 
     }
 
+    @Override
     public Ville getVilleById(int id) throws VilleException {
 
         Ville villeDB = villeRepository.findById(id);
@@ -37,6 +39,7 @@ public class VilleService {
 
     }
 
+    @Override
     public Ville getVilleByNom(String nom) throws VilleException {
 
         Ville villeDB = villeRepository.findByNom(nom);
@@ -48,6 +51,7 @@ public class VilleService {
 
     }
 
+    @Override
     public List<Ville> getVillesContenantNom(String nom) throws VilleException {
 
         List<Ville> villesDB = villeRepository.findByNomContainingIgnoreCase(nom);
@@ -59,6 +63,7 @@ public class VilleService {
 
     }
 
+    @Override
     public List<Ville> getVillesPopulationMin(int min) throws VilleException {
 
         List<Ville> villesDB = villeRepository.findByPopulationGreaterThanEqualOrderByPopulationDesc(min);
@@ -70,6 +75,7 @@ public class VilleService {
 
     }
 
+    @Override
     public List<Ville> getVillesPopulationBetween(int min, int max) throws VilleException {
 
         List<Ville> villesDB = villeRepository.findByPopulationBetweenOrderByPopulationDesc(min, max);
@@ -81,6 +87,7 @@ public class VilleService {
 
     }
 
+    @Override
     public List<Ville> getVillesFromDepartementPopulationMin(String codeDptm, int min) throws VilleException {
 
         List<Ville> villesDB = villeRepository.findAllVilleFromDepartementPopulationMin(codeDptm, min);
@@ -92,6 +99,7 @@ public class VilleService {
 
     }
 
+    @Override
     public List<Ville> getVillesFromDepartementPopulationBetween(String codeDptm, int min, int max) throws VilleException {
 
         List<Ville> villesDB = villeRepository.findAllVilleFromDepartementPopulationBetween(codeDptm, min, max);
@@ -103,6 +111,7 @@ public class VilleService {
 
     }
 
+    @Override
     public List<Ville> getVillesNPlusPeupleesFromDepartement(int top, String codeDptm) throws VilleException {
 
         List<Ville> villesDB = villeRepository.findTopVilleFromDepartement(top, codeDptm);
@@ -115,6 +124,7 @@ public class VilleService {
     }
 
     @Transactional
+    @Override
     public void addVille(Ville ville) throws VilleException {
 
         if (villeRepository.findByNom(ville.getNom()) == null) {
@@ -126,6 +136,7 @@ public class VilleService {
     }
 
     @Transactional
+    @Override
     public void updateVille(int id, Ville ville) throws VilleException {
 
         Ville villeDB = villeRepository.findById(id);
@@ -140,6 +151,7 @@ public class VilleService {
     }
 
     @Transactional
+    @Override
     public void deleteVille(int id) throws VilleException {
 
         Ville villeDB = villeRepository.findById(id);
