@@ -9,8 +9,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface IVilleControleur {
@@ -193,5 +195,7 @@ public interface IVilleControleur {
     ResponseEntity<String> deleteVille(
             @Parameter(description = "Identifiant de la ville à récupérer.", example = "3", required = true)int id
     ) throws VilleException;
+
+    void exportVillesPopMinCSV(int min, HttpServletResponse response) throws IOException, VilleException;
 
 }

@@ -1,8 +1,10 @@
-package fr.diginamic.services;
+package fr.diginamic.dummydatas.services;
 
 import fr.diginamic.entites.Departement;
 import fr.diginamic.entites.Ville;
 import fr.diginamic.exceptions.VilleException;
+import fr.diginamic.services.IDepartementService;
+import fr.diginamic.services.IVilleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,14 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class DummyDataService {
+public class VeryFewDummyDataService implements IDummyDataService {
 
     @Autowired
     private IVilleService villeService;
     @Autowired
     private IDepartementService departementService;
 
-    public void insererQuelquesVillesEtDepartements() {
+    @Override
+    public void insererVillesEtDepartements() {
 
         List<Ville> villes = new ArrayList<>();
         villes.add(new Ville("Nice", 353_000, new Departement("06", "Alpes-Maritimes")));

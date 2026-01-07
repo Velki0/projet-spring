@@ -1,5 +1,13 @@
 package fr.diginamic.controleurs;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfWriter;
 import fr.diginamic.dtos.DepartementDto;
 import fr.diginamic.entites.Departement;
 import fr.diginamic.entites.Ville;
@@ -8,6 +16,7 @@ import fr.diginamic.exceptions.VilleException;
 import fr.diginamic.mappers.IDepartementMapper;
 import fr.diginamic.services.IDepartementService;
 import fr.diginamic.services.IVilleService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -125,6 +135,27 @@ public class DepartementControleur implements IDepartementControleur {
         });
         departementService.deleteDepartement(id);
         return ResponseEntity.ok("Le département avec l'id :  " + id + " a bien été supprimée.");
+
+    }
+
+    @GetMapping("/fiche/{codeDptm}")
+    @Override
+    public void exportDepartementPDF(@PathVariable String codeDptm, HttpServletResponse response) throws IOException, DocumentException, DepartementException {
+
+        response.setHeader("Content-Disposition", "attachment; filename=\"departement.pdf\"");
+        Document document = new Document(PageSize.A4);
+        PdfWriter.getInstance(document, response.getOutputStream());
+
+        Departement departementDB = departementService.getDepartementByCode(codeDptm);
+
+//        document.open();
+//        document.addTitle("Departement du " + departementDB.getCodeDepartement());
+//        document.newPage();
+//        BaseFont baseFont = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);
+//        Phrase p1 = new Phrase("COUCOU", new Font(baseFont, 32.0f, 1, new BaseColor(0, 51, 80)));
+//        document.add(p1);
+//        document.close();
+//        response.flushBuffer();
 
     }
 

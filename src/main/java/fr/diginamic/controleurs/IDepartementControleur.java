@@ -1,5 +1,6 @@
 package fr.diginamic.controleurs;
 
+import com.itextpdf.text.DocumentException;
 import fr.diginamic.dtos.DepartementDto;
 import fr.diginamic.exceptions.DepartementException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,8 +10,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface IDepartementControleur {
@@ -113,5 +116,7 @@ public interface IDepartementControleur {
     ResponseEntity<String> deleteDepartement(
             @Parameter(description = "Identifiant du département à récupérer.", example = "2", required = true)int id
     ) throws DepartementException;
+
+    void exportDepartementPDF(String codeDptm, HttpServletResponse response) throws IOException, DocumentException, DepartementException;
 
 }

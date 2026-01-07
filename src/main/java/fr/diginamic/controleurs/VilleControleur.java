@@ -6,6 +6,7 @@ import fr.diginamic.exceptions.VilleException;
 import fr.diginamic.mappers.IVilleMapper;
 import fr.diginamic.services.IDepartementService;
 import fr.diginamic.services.IVilleService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -163,6 +165,32 @@ public class VilleControleur implements IVilleControleur {
 
         villeService.deleteVille(id);
         return ResponseEntity.ok("La ville avec l'id " + id + " a bien été supprimée.");
+
+    }
+
+    @GetMapping("/fiche/{min}")
+    @Override
+    public void exportVillesPopMinCSV(@PathVariable int min, HttpServletResponse response) throws IOException, VilleException {
+
+        response.setHeader("Content-Disposition", "attachment; filename=\"villesavecaumoins" + min + "habitants.csv\"");
+        response.getWriter().append("Nom de la ville;Nombre d’habitants;Code département;Nom du département\n");
+        List<Ville> villesDB = villeService.getVillesPopulationMin(min);
+        if (!villesDB.isEmpty()) {
+            for (Ville ville : villesDB) {
+                response.getWriter()
+                        .append(ville.getNom())
+                        .append(";")
+                        .append(Integer.toString(ville.getPopulation()))
+                        .append(";")
+                        .append(ville.getDepartement().getCodeDepartement())
+                        .append(";")
+                        .append(ville.getDepartement().getNom())
+                        .append("\n");
+            }
+            response.flushBuffer();
+        } else {
+            throw new VilleException("Impossible de générer le fichier CSV demandé. Aucune ville n'a été trouvée.");
+        }
 
     }
 
