@@ -140,9 +140,9 @@ public class VilleService {
     @Transactional
     public void deleteVille(int id) throws VilleException {
 
-        Ville villeEnBase = villeRepository.findById(id);
-        if (villeEnBase != null) {
-            villeRepository.delete(villeEnBase);
+        Ville villeDB = villeRepository.findById(id);
+        if (villeDB != null) {
+            villeRepository.delete(villeDB);
         } else {
             throw new VilleException("La ville avec l'id " + id + " n'existe pas en base de données. Impossible de la supprimer.");
         }

@@ -83,11 +83,11 @@ public class DepartementService {
     @Transactional
     public void updateDepartement(int id, Departement departement) throws DepartementException {
 
-        Departement departementEnBase = departementRepository.findById(id);
-        if (departementEnBase != null) {
-            departementEnBase.setCodeDepartement(departement.getCodeDepartement());
-            departementEnBase.setNom(departement.getNom());
-            departementEnBase.setVilles(departement.getVilles());
+        Departement departementDB = departementRepository.findById(id);
+        if (departementDB != null) {
+            departementDB.setCodeDepartement(departement.getCodeDepartement());
+            departementDB.setNom(departement.getNom());
+            departementDB.setVilles(departement.getVilles());
         } else {
             throw new DepartementException("Le département avec l'id " + id + " n'existe pas en base de données. Impossible de le modifier.");
         }
@@ -97,9 +97,9 @@ public class DepartementService {
     @Transactional
     public void deleteDepartement(int id) throws DepartementException {
 
-        Departement departementEnBase = departementRepository.findById(id);
-        if (departementEnBase != null) {
-            departementRepository.delete(departementEnBase);
+        Departement departementDB = departementRepository.findById(id);
+        if (departementDB != null) {
+            departementRepository.delete(departementDB);
         } else {
             throw new DepartementException("Le département avec l'id " + id + " n'existe pas en base de données. Impossible de le supprimer.");
         }
