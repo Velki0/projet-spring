@@ -3,6 +3,7 @@ package fr.diginamic.controleurs;
 import fr.diginamic.dtos.DepartementDto;
 import fr.diginamic.exceptions.DepartementException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,7 +23,10 @@ public interface IDepartementControleur {
                             mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = DepartementDto.class)))})
     })
-    ResponseEntity<List<DepartementDto>> getDepartements(Integer page, Integer taille);
+    ResponseEntity<List<DepartementDto>> getDepartements(
+            @Parameter(description = "Page à afficher parmi les résultats.", example = "2")Integer page,
+            @Parameter(description = "Taille du nombre de résultats dans la page.", example = "10")Integer taille
+    );
 
     @Operation(summary = "Retourne un département à partir de son identifiant.")
     @ApiResponses(value={
@@ -36,7 +40,9 @@ public interface IDepartementControleur {
                     description = "Département non trouvé.",
                     content = @Content())
     })
-    ResponseEntity<DepartementDto> getDepartementsById(int id) throws DepartementException;
+    ResponseEntity<DepartementDto> getDepartementsById(
+            @Parameter(description = "Identifiant du département à récupérer.", example = "3", required = true)int id
+    ) throws DepartementException;
 
     @Operation(summary = "Retourne un département à partir de son nom.")
     @ApiResponses(value={
@@ -50,7 +56,9 @@ public interface IDepartementControleur {
                     description = "Département non trouvé.",
                     content = @Content())
     })
-    ResponseEntity<DepartementDto> getDepartementsByNom(String nom) throws DepartementException;
+    ResponseEntity<DepartementDto> getDepartementsByNom(
+            @Parameter(description = "Nom du département à récupérer.", example = "Seine-Maritime", required = true)String nom
+    ) throws DepartementException;
 
     @Operation(summary = "Retourne un département à partir de son code.")
     @ApiResponses(value={
@@ -64,7 +72,9 @@ public interface IDepartementControleur {
                     description = "Département non trouvé.",
                     content = @Content())
     })
-    ResponseEntity<DepartementDto> getDepartementsByCode(String codeDptm) throws DepartementException;
+    ResponseEntity<DepartementDto> getDepartementsByCode(
+            @Parameter(description = "Code du département à récupérer.", example = "34", required = true)String codeDptm
+    ) throws DepartementException;
 
     @Operation(summary = "Ajoute un département.")
     @ApiResponses(value={
@@ -86,7 +96,10 @@ public interface IDepartementControleur {
                     description = "Département renseigné non valide ou introuvable.",
                     content = @Content())
     })
-    ResponseEntity<String> updateDepartement(int id, DepartementDto departementDto) throws DepartementException;
+    ResponseEntity<String> updateDepartement(
+            @Parameter(description = "Identifiant du département à récupérer.", example = "2", required = true)int id,
+            DepartementDto departementDto
+    ) throws DepartementException;
 
     @Operation(summary = "Supprime un département.")
     @ApiResponses(value={
@@ -97,6 +110,8 @@ public interface IDepartementControleur {
                     description = "Département introuvable.",
                     content = @Content())
     })
-    ResponseEntity<String> deleteDepartement(int id) throws DepartementException;
+    ResponseEntity<String> deleteDepartement(
+            @Parameter(description = "Identifiant du département à récupérer.", example = "2", required = true)int id
+    ) throws DepartementException;
 
 }
