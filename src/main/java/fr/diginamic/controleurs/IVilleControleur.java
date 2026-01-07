@@ -169,7 +169,7 @@ public interface IVilleControleur {
 
     @Operation(summary = "Modifie une ville.")
     @ApiResponses(value={
-            @ApiResponse(responseCode = "200",
+            @ApiResponse(responseCode = "201",
                     description = "La modification de la ville a été effectuée.",
                     content= @Content()),
             @ApiResponse(responseCode = "400",
