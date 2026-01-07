@@ -27,7 +27,7 @@ public class DepartementDao {
         try {
             return em.find(Departement.class, id);
         } catch (Exception ex) {
-            throw new DepartementException("Le département avec le nom " + id + " n'existe pas en base de données. Impossible de le modifier.");
+            throw new DepartementException("Le département avec l'id " + id + " n'existe pas en base de données.");
         }
 
     }
@@ -37,7 +37,7 @@ public class DepartementDao {
         try {
             return em.createQuery("FROM Departement d WHERE d.nom = :nom", Departement.class).setParameter("nom", nom).getSingleResult();
         } catch (Exception ex) {
-            throw new DepartementException("Le département avec le nom " + nom + " n'existe pas en base de données. Impossible de le modifier.");
+            throw new DepartementException("Le département avec le nom " + nom + " n'existe pas en base de données.");
         }
 
     }

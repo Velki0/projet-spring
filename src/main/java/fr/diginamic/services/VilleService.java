@@ -4,6 +4,8 @@ import fr.diginamic.daos.VilleRepository;
 import fr.diginamic.entites.Ville;
 import fr.diginamic.exceptions.VilleException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,9 +17,10 @@ public class VilleService {
     @Autowired
     private VilleRepository villeRepository;
 
-    public List<Ville> getAllVilles() {
+    public Page<Ville> getAllVilles(int page, int taille) {
 
-        return villeRepository.findAll();
+        PageRequest pagination = PageRequest.of(page, taille);
+        return villeRepository.findAll(pagination);
 
     }
 

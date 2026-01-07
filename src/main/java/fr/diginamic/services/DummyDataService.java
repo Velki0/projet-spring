@@ -29,7 +29,7 @@ public class DummyDataService {
         villes.add(new Ville("Tarbes", 40_600, new Departement("65", "Hautes-Pyrénées")));
 
         // Insertion en base de données.
-        villes.forEach(ville -> ville.setDepartement(departementService.addDepartement(ville.getDepartement())));
+        villes.forEach(ville -> ville.setDepartement(departementService.addDepartementDeVille(ville.getDepartement())));
         villes.forEach(v -> {
             try {
                 villeService.addVille(v);

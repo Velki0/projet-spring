@@ -9,6 +9,7 @@ import fr.diginamic.mappers.DepartementMapper;
 import fr.diginamic.services.DepartementService;
 import fr.diginamic.services.VilleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -40,9 +42,9 @@ public class DepartementControleur {
     private DepartementMapper departementMapper;
 
     @GetMapping
-    public ResponseEntity<List<DepartementDto>> getDepartements(){
+    public ResponseEntity<List<DepartementDto>> getDepartements(@RequestParam int page, @RequestParam int taille){
 
-        List<Departement> departements = departementService.getAllDepartements();
+        Page<Departement> departements = departementService.getAllDepartements(page, taille);
         List<DepartementDto> departementsDto = departements.stream().map(dptm -> departementMapper.toDto(dptm)).toList();
         return ResponseEntity.ok(departementsDto);
 
@@ -61,6 +63,15 @@ public class DepartementControleur {
     public ResponseEntity<DepartementDto> getDepartementsByNom(@PathVariable String nom) throws DepartementException {
 
         Departement departements = departementService.getDepartementByNom(nom);
+        DepartementDto departementDto = departementMapper.toDto(departements);
+        return ResponseEntity.ok(departementDto);
+
+    }
+
+    @GetMapping(path = "/byCode/{codeDptm}")
+    public ResponseEntity<DepartementDto> getDepartementsByCode(@PathVariable String codeDptm) throws DepartementException {
+
+        Departement departements = departementService.getDepartementByCode(codeDptm);
         DepartementDto departementDto = departementMapper.toDto(departements);
         return ResponseEntity.ok(departementDto);
 
@@ -97,7 +108,7 @@ public class DepartementControleur {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<String> deleteDepartement(@PathVariable int id) throws DepartementException{
+    public ResponseEntity<String> deleteDepartement(@PathVariable int id) throws DepartementException {
 
         Departement departement = departementService.getDepartementById(id);
         departement.getVilles().stream().map(Ville::getId).forEach(villeId -> {

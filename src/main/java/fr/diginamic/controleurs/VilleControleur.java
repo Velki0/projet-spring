@@ -1,14 +1,13 @@
 package fr.diginamic.controleurs;
 
 import fr.diginamic.dtos.VilleDto;
-import fr.diginamic.entites.Departement;
 import fr.diginamic.entites.Ville;
-import fr.diginamic.exceptions.DepartementException;
 import fr.diginamic.exceptions.VilleException;
 import fr.diginamic.mappers.VilleMapper;
 import fr.diginamic.services.DepartementService;
 import fr.diginamic.services.VilleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -41,9 +40,9 @@ public class VilleControleur {
     private VilleMapper villeMapper;
 
     @GetMapping
-    public ResponseEntity<List<VilleDto>> getVilles() {
+    public ResponseEntity<List<VilleDto>> getVilles(@RequestParam int page, @RequestParam int taille) {
 
-        List<Ville> villes = villeService.getAllVilles();
+        Page<Ville> villes = villeService.getAllVilles(page, taille);
         List<VilleDto> villesDto = villes.stream().map(v -> villeMapper.toDto(v)).toList();
         return ResponseEntity.ok(villesDto);
 
@@ -67,25 +66,51 @@ public class VilleControleur {
 
     }
 
-    @GetMapping(path = "/nLargestVillesFromDptm")
-    public ResponseEntity<List<VilleDto>> getNPlusGrandesVilles(@RequestParam int top, @RequestParam String codeDptm) throws VilleException {
+    @GetMapping(path = "/contientNom/{nom}")
+    public ResponseEntity<List<VilleDto>> getVillesContientNom(@PathVariable String nom) throws VilleException {
 
-        List<Ville> villesDB = villeService.getVillesNPlusPeupleesFromDepartement(top, codeDptm);
+        List<Ville> villesDB = villeService.getVillesContenantNom(nom);
         return ResponseEntity.ok(villesDB.stream().map(v -> villeMapper.toDto(v)).toList());
 
     }
 
-    // TODO
-    @GetMapping(path = "/villesPopBetweenFromDptm")
-    public ResponseEntity<List<VilleDto>> getVillesPopulationMinMax(@RequestParam int min, @RequestParam int max, @RequestParam String nomDptm) throws DepartementException {
+    @GetMapping(path = "/popMin")
+    public ResponseEntity<List<VilleDto>> getVillesPopMin(@RequestParam int min) throws VilleException {
 
-        Departement departement = departementService.getDepartementByNom(nomDptm);
-        return ResponseEntity.ok(
-                departement.getVilles().stream()
-                                             .filter(ville -> ville.getPopulation() > min)
-                                             .filter(ville -> ville.getPopulation() < max)
-                                             .map(ville -> villeMapper.toDto(ville))
-                                             .toList());
+        List<Ville> villesDB = villeService.getVillesPopulationMin(min);
+        return ResponseEntity.ok(villesDB.stream().map(v -> villeMapper.toDto(v)).toList());
+
+    }
+
+    @GetMapping(path = "/popBetween")
+    public ResponseEntity<List<VilleDto>> getVillesPopBetween(@RequestParam int min, @RequestParam int max) throws VilleException {
+
+        List<Ville> villesDB = villeService.getVillesPopulationBetween(min, max);
+        return ResponseEntity.ok(villesDB.stream().map(v -> villeMapper.toDto(v)).toList());
+
+    }
+
+    @GetMapping(path = "/popMinFromDptm")
+    public ResponseEntity<List<VilleDto>> getVillesFromDptmPopMin(@RequestParam int min, @RequestParam String codeDptm) throws VilleException {
+
+        List<Ville> villesDB = villeService.getVillesFromDepartementPopulationMin(codeDptm, min);
+        return ResponseEntity.ok(villesDB.stream().map(v -> villeMapper.toDto(v)).toList());
+
+    }
+
+    @GetMapping(path = "/popBetweenFromDptm")
+    public ResponseEntity<List<VilleDto>> getVillesFromDptmPopBetween(@RequestParam int min, @RequestParam int max, @RequestParam String codeDptm) throws VilleException {
+
+        List<Ville> villesDB = villeService.getVillesFromDepartementPopulationBetween(codeDptm, min, max);
+        return ResponseEntity.ok(villesDB.stream().map(v -> villeMapper.toDto(v)).toList());
+
+    }
+
+    @GetMapping(path = "/nPlusGrandesFromDptm")
+    public ResponseEntity<List<VilleDto>> getNPlusGrandesVillesFromDptm(@RequestParam int top, @RequestParam String codeDptm) throws VilleException {
+
+        List<Ville> villesDB = villeService.getVillesNPlusPeupleesFromDepartement(top, codeDptm);
+        return ResponseEntity.ok(villesDB.stream().map(v -> villeMapper.toDto(v)).toList());
 
     }
 
@@ -99,7 +124,7 @@ public class VilleControleur {
             throw new VilleException(messageErreur);
         }
         Ville ville = villeMapper.toEntity(villeDto);
-        ville.setDepartement(departementService.addDepartement(ville.getDepartement()));
+        ville.setDepartement(departementService.addDepartementDeVille(ville.getDepartement()));
         villeService.addVille(ville);
         return ResponseEntity.status(HttpStatus.CREATED).body("La ville de : " + ville.getNom() + " a été créée avec succès.");
 
@@ -115,7 +140,7 @@ public class VilleControleur {
             throw new VilleException(messageErreur);
         }
         Ville ville = villeMapper.toEntity(villeDto);
-        ville.setDepartement(departementService.addDepartement(ville.getDepartement()));
+        ville.setDepartement(departementService.addDepartementDeVille(ville.getDepartement()));
         villeService.updateVille(id, ville);
         return ResponseEntity.ok("La ville de " + ville.getNom() + " a bien été modifiée.");
 

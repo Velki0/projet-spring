@@ -30,7 +30,7 @@ public interface VilleRepository extends JpaRepository<Ville,Integer> {
     List<Ville> findAllVilleFromDepartementPopulationBetween(String codeDptm, int min, int max);
 
     // Recherche des n villes les plus peuplées d’un département donné.
-    @Query("SELECT DISTINCT v FROM Ville v WHERE v.departement.codeDepartement = :codeDptm ORDER BY v.population LIMIT :top")
+    @Query("SELECT DISTINCT v FROM Ville v WHERE v.departement.codeDepartement = :codeDptm ORDER BY v.population DESC LIMIT :top")
     List<Ville> findTopVilleFromDepartement(int top, String codeDptm);
 
 }
