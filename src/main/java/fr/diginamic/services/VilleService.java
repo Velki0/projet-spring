@@ -17,8 +17,10 @@ public class VilleService {
     @Autowired
     private VilleRepository villeRepository;
 
-    public Page<Ville> getAllVilles(int page, int taille) {
+    public Page<Ville> getAllVilles(Integer page, Integer taille) {
 
+        if (page == null){ page = 0; }
+        if (taille == null){ taille = Integer.MAX_VALUE; }
         PageRequest pagination = PageRequest.of(page, taille);
         return villeRepository.findAll(pagination);
 

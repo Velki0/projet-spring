@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/villes")
-public class VilleControleur {
+public class VilleControleur implements IVilleControleur {
 
     @Autowired
     private Validator validator;
@@ -40,7 +40,8 @@ public class VilleControleur {
     private VilleMapper villeMapper;
 
     @GetMapping
-    public ResponseEntity<List<VilleDto>> getVilles(@RequestParam int page, @RequestParam int taille) {
+    @Override
+    public ResponseEntity<List<VilleDto>> getVilles(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer taille) {
 
         Page<Ville> villes = villeService.getAllVilles(page, taille);
         List<VilleDto> villesDto = villes.stream().map(v -> villeMapper.toDto(v)).toList();
@@ -49,6 +50,7 @@ public class VilleControleur {
     }
 
     @GetMapping(path = "/byId/{id}")
+    @Override
     public ResponseEntity<VilleDto> getVilleById(@PathVariable int id) throws VilleException {
 
         Ville ville = villeService.getVilleById(id);
@@ -58,6 +60,7 @@ public class VilleControleur {
     }
 
     @GetMapping(path = "/byNom/{nom}")
+    @Override
     public ResponseEntity<VilleDto> getVillesByNom(@PathVariable String nom) throws VilleException {
 
         Ville ville = villeService.getVilleByNom(nom);
@@ -66,7 +69,8 @@ public class VilleControleur {
 
     }
 
-    @GetMapping(path = "/contientNom/{nom}")
+    @GetMapping(path = "/contenir/{nom}")
+    @Override
     public ResponseEntity<List<VilleDto>> getVillesContientNom(@PathVariable String nom) throws VilleException {
 
         List<Ville> villesDB = villeService.getVillesContenantNom(nom);
@@ -75,6 +79,7 @@ public class VilleControleur {
     }
 
     @GetMapping(path = "/popMin")
+    @Override
     public ResponseEntity<List<VilleDto>> getVillesPopMin(@RequestParam int min) throws VilleException {
 
         List<Ville> villesDB = villeService.getVillesPopulationMin(min);
@@ -83,6 +88,7 @@ public class VilleControleur {
     }
 
     @GetMapping(path = "/popBetween")
+    @Override
     public ResponseEntity<List<VilleDto>> getVillesPopBetween(@RequestParam int min, @RequestParam int max) throws VilleException {
 
         List<Ville> villesDB = villeService.getVillesPopulationBetween(min, max);
@@ -91,6 +97,7 @@ public class VilleControleur {
     }
 
     @GetMapping(path = "/popMinFromDptm")
+    @Override
     public ResponseEntity<List<VilleDto>> getVillesFromDptmPopMin(@RequestParam int min, @RequestParam String codeDptm) throws VilleException {
 
         List<Ville> villesDB = villeService.getVillesFromDepartementPopulationMin(codeDptm, min);
@@ -99,6 +106,7 @@ public class VilleControleur {
     }
 
     @GetMapping(path = "/popBetweenFromDptm")
+    @Override
     public ResponseEntity<List<VilleDto>> getVillesFromDptmPopBetween(@RequestParam int min, @RequestParam int max, @RequestParam String codeDptm) throws VilleException {
 
         List<Ville> villesDB = villeService.getVillesFromDepartementPopulationBetween(codeDptm, min, max);
@@ -107,6 +115,7 @@ public class VilleControleur {
     }
 
     @GetMapping(path = "/nPlusGrandesFromDptm")
+    @Override
     public ResponseEntity<List<VilleDto>> getNPlusGrandesVillesFromDptm(@RequestParam int top, @RequestParam String codeDptm) throws VilleException {
 
         List<Ville> villesDB = villeService.getVillesNPlusPeupleesFromDepartement(top, codeDptm);
@@ -114,7 +123,8 @@ public class VilleControleur {
 
     }
 
-    @PostMapping
+    @PostMapping(path = "/ajouter")
+    @Override
     public ResponseEntity<String> addVille(@RequestBody VilleDto villeDto) throws VilleException {
 
         Errors resultat = validator.validateObject(villeDto);
@@ -130,7 +140,8 @@ public class VilleControleur {
 
     }
 
-    @PutMapping(path = "/{id}")
+    @PutMapping(path = "/modifier/{id}")
+    @Override
     public ResponseEntity<String> updateVille(@PathVariable int id, @RequestBody VilleDto villeDto) throws VilleException {
 
         Errors resultat = validator.validateObject(villeDto);
@@ -146,7 +157,8 @@ public class VilleControleur {
 
     }
 
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "/supprimer/{id}")
+    @Override
     public ResponseEntity<String> deleteVille(@PathVariable int id) throws VilleException {
 
         villeService.deleteVille(id);

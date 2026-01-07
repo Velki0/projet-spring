@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/dptms")
-public class DepartementControleur {
+public class DepartementControleur implements IDepartementControleur {
 
     @Autowired
     private Validator validator;
@@ -42,7 +42,8 @@ public class DepartementControleur {
     private DepartementMapper departementMapper;
 
     @GetMapping
-    public ResponseEntity<List<DepartementDto>> getDepartements(@RequestParam int page, @RequestParam int taille){
+    @Override
+    public ResponseEntity<List<DepartementDto>> getDepartements(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer taille){
 
         Page<Departement> departements = departementService.getAllDepartements(page, taille);
         List<DepartementDto> departementsDto = departements.stream().map(dptm -> departementMapper.toDto(dptm)).toList();
@@ -51,6 +52,7 @@ public class DepartementControleur {
     }
 
     @GetMapping(path = "/byId/{id}")
+    @Override
     public ResponseEntity<DepartementDto> getDepartementsById(@PathVariable int id) throws DepartementException {
 
         Departement departements = departementService.getDepartementById(id);
@@ -60,6 +62,7 @@ public class DepartementControleur {
     }
 
     @GetMapping(path = "/byNom/{nom}")
+    @Override
     public ResponseEntity<DepartementDto> getDepartementsByNom(@PathVariable String nom) throws DepartementException {
 
         Departement departements = departementService.getDepartementByNom(nom);
@@ -69,6 +72,7 @@ public class DepartementControleur {
     }
 
     @GetMapping(path = "/byCode/{codeDptm}")
+    @Override
     public ResponseEntity<DepartementDto> getDepartementsByCode(@PathVariable String codeDptm) throws DepartementException {
 
         Departement departements = departementService.getDepartementByCode(codeDptm);
@@ -77,7 +81,8 @@ public class DepartementControleur {
 
     }
 
-    @PostMapping
+    @PostMapping(path = "/ajouter")
+    @Override
     public ResponseEntity<String> addDepartement(@RequestBody DepartementDto departementDto) throws DepartementException {
 
         Errors resultat = validator.validateObject(departementDto);
@@ -92,7 +97,8 @@ public class DepartementControleur {
 
     }
 
-    @PutMapping(path = "/{id}")
+    @PutMapping(path = "/modifier/{id}")
+    @Override
     public ResponseEntity<String> updateDepartement(@PathVariable int id, @RequestBody DepartementDto departementDto) throws DepartementException {
 
         Errors resultat = validator.validateObject(departementDto);
@@ -107,7 +113,8 @@ public class DepartementControleur {
 
     }
 
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "/supprimer/{id}")
+    @Override
     public ResponseEntity<String> deleteDepartement(@PathVariable int id) throws DepartementException {
 
         Departement departement = departementService.getDepartementById(id);

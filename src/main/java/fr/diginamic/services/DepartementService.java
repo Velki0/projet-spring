@@ -15,8 +15,10 @@ public class DepartementService {
     @Autowired
     private DepartementRepository departementRepository;
 
-    public Page<Departement> getAllDepartements(int page, int taille){
+    public Page<Departement> getAllDepartements(Integer page, Integer taille){
 
+        if (page == null){ page = 0; }
+        if (taille == null){ taille = Integer.MAX_VALUE; }
         PageRequest pagination = PageRequest.of(page, taille);
         return departementRepository.findAll(pagination);
 
