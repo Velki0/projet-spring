@@ -1,4 +1,4 @@
-package fr.diginamic.daos;
+package fr.diginamic.repositories;
 
 import fr.diginamic.entites.Ville;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,6 +1,6 @@
 package fr.diginamic.services;
 
-import fr.diginamic.daos.DepartementRepository;
+import fr.diginamic.repositories.DepartementRepository;
 import fr.diginamic.entites.Departement;
 import fr.diginamic.exceptions.DepartementException;
 import org.springframework.beans.factory.annotation.Autowired;

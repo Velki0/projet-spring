@@ -1,6 +1,6 @@
 package fr.diginamic.services;
 
-import fr.diginamic.daos.VilleRepository;
+import fr.diginamic.repositories.VilleRepository;
 import fr.diginamic.entites.Ville;
 import fr.diginamic.exceptions.VilleException;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 import java.util.HashSet;
@@ -27,6 +29,10 @@ public class Departement {
     @OneToMany(mappedBy = "departement")
     private Set<Ville> villes = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "REGION_ID")
+    private Region region;
+
     public Departement() {}
 
     public Departement(String codeDepartement, String nom) {
@@ -40,9 +46,11 @@ public class Departement {
     public String getCodeDepartement() { return codeDepartement; }
     public String getNom() { return nom; }
     public Set<Ville> getVilles() { return villes; }
+    public Region getRegion() { return region; }
 
     public void setCodeDepartement(String codeDepartement) { this.codeDepartement = codeDepartement; }
     public void setNom(String nom) { this.nom = nom; }
     public void setVilles(Set<Ville> villes) { this.villes = villes; }
+    public void setRegion(Region region) { this.region = region; }
 
 }

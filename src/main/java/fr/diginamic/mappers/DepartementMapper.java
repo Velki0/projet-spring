@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class DepartementMapper implements IDepartementMapper {
 
     @Autowired
-    private IVilleMapper IVilleMapper;
+    private IVilleMapper villeMapper;
 
     @Override
     public DepartementDto toDto(Departement departement) {
@@ -19,7 +19,9 @@ public class DepartementMapper implements IDepartementMapper {
         return new DepartementDto(departement.getId(),
                 departement.getCodeDepartement(),
                 departement.getNom(),
-                departement.getVilles().stream().map(ville -> IVilleMapper.toDto(ville)).collect(Collectors.toSet())
+                departement.getVilles().stream().map(ville -> villeMapper.toDto(ville)).collect(Collectors.toSet()),
+                departement.getRegion().getCodeRegion(),
+                departement.getRegion().getNom()
         );
 
     }
