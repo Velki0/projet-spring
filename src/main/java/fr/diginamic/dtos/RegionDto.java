@@ -45,7 +45,7 @@ public class RegionDto {
     public int getId() { return id; }
     public String getCodeRegion() { return codeRegion; }
     public String getNomRegion() { return nomRegion; }
-    public int getNombreDepartement() { return nombreDepartements; }
+    public int getNombreDepartements() { return nombreDepartements; }
     public Set<String> getNomsDepartements() { return nomsDepartements; }
 
 }
