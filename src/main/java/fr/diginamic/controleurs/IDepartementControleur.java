@@ -3,6 +3,7 @@ package fr.diginamic.controleurs;
 import com.itextpdf.text.DocumentException;
 import fr.diginamic.dtos.DepartementDto;
 import fr.diginamic.exceptions.DepartementException;
+import fr.diginamic.exceptions.VilleException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -117,6 +118,18 @@ public interface IDepartementControleur {
             @Parameter(description = "Identifiant du département à récupérer.", example = "2", required = true)int id
     ) throws DepartementException;
 
-    void exportDepartementPDF(String codeDptm, HttpServletResponse response) throws IOException, DocumentException, DepartementException;
+    @Operation(summary = "Génère un PDF pour un département donné avec sa liste de villes.")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200",
+                    description = "La génération du PDF a été réalisée avec succès.",
+                    content= @Content()),
+            @ApiResponse(responseCode = "400",
+                    description = "Département introuvable ou associé à aucune ville.",
+                    content = @Content())
+    })
+    void exportDepartementPDF(
+            @Parameter(description = "Identifiant du département à récupérer.", example = "2", required = true)String codeDptm,
+            HttpServletResponse response
+    ) throws IOException, DocumentException, VilleException, DepartementException;
 
 }

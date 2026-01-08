@@ -1,12 +1,14 @@
 package fr.diginamic.controleurs;
 
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import fr.diginamic.dtos.DepartementDto;
 import fr.diginamic.entites.Departement;
@@ -35,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -140,22 +143,55 @@ public class DepartementControleur implements IDepartementControleur {
 
     @GetMapping("/fiche/{codeDptm}")
     @Override
-    public void exportDepartementPDF(@PathVariable String codeDptm, HttpServletResponse response) throws IOException, DocumentException, DepartementException {
+    public void exportDepartementPDF(@PathVariable String codeDptm, HttpServletResponse response) throws IOException, DocumentException, VilleException, DepartementException {
 
         response.setHeader("Content-Disposition", "attachment; filename=\"departement.pdf\"");
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
+        List<Ville> villesDB = villeService.getVillesNPlusPeupleesFromDepartement(15, codeDptm);
+        if (!villesDB.isEmpty()) {
+            document.open();
+            document.addTitle("Departement du " + codeDptm);
+            document.newPage();
+            BaseFont baseFont = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);
 
-        Departement departementDB = departementService.getDepartementByCode(codeDptm);
+            // Haut de Page
+            Phrase titreHautDePage = new Phrase("Fiche de Département", new Font(baseFont, 16f, 1, new BaseColor(3, 34, 76)));
+            document.add(titreHautDePage);
+            document.add(Chunk.NEWLINE);
+            Phrase separateur = new Phrase("-".repeat(100), new Font(baseFont, 14, 1, new BaseColor(0, 0, 0)));
+            document.add(separateur);
+            document.add(Chunk.NEWLINE);
+            Phrase departement = new Phrase("Département : " + codeDptm, new Font(baseFont, 14, 1, new BaseColor(0, 0, 0)));
+            document.add(departement);
+            document.add(Chunk.NEWLINE);
+            Phrase date = new Phrase("Date               : " + LocalDate.now(), new Font(baseFont, 14, 1, new BaseColor(0, 0, 0)));
+            document.add(date);
+            document.add(Chunk.NEWLINE);
+            document.add(separateur);
+            document.add(Chunk.NEWLINE);
 
-//        document.open();
-//        document.addTitle("Departement du " + departementDB.getCodeDepartement());
-//        document.newPage();
-//        BaseFont baseFont = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.EMBEDDED);
-//        Phrase p1 = new Phrase("COUCOU", new Font(baseFont, 32.0f, 1, new BaseColor(0, 51, 80)));
-//        document.add(p1);
-//        document.close();
-//        response.flushBuffer();
+            // Corps de Page
+            int villesTotalesDB = Math.min(villesDB.size(), 15);
+            Phrase titreCorps = new Phrase("Top" + villesTotalesDB + " des Villes par ordre décroisant de population :", new Font(baseFont, 14, 1, new BaseColor(3, 34, 76)));
+            document.add(titreCorps);
+            PdfPTable tableauResultats = new PdfPTable(3);
+            tableauResultats.setWidthPercentage(80);
+            tableauResultats.addCell("Id");
+            tableauResultats.addCell("Ville");
+            tableauResultats.addCell("Population");
+            for (Ville ville : villesDB) {
+                tableauResultats.addCell(Integer.toString(ville.getId()));
+                tableauResultats.addCell(ville.getNom());
+                tableauResultats.addCell(Integer.toString(ville.getPopulation()));
+            }
+            document.add(tableauResultats);
+
+            document.close();
+            response.flushBuffer();
+        } else {
+            throw new DepartementException("Impossible de générer le fichier PDF. Le département est vide.");
+        }
 
     }
 

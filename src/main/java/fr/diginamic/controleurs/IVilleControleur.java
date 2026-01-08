@@ -196,6 +196,18 @@ public interface IVilleControleur {
             @Parameter(description = "Identifiant de la ville à récupérer.", example = "3", required = true)int id
     ) throws VilleException;
 
-    void exportVillesPopMinCSV(int min, HttpServletResponse response) throws IOException, VilleException;
+    @Operation(summary = "Génère un fichier CSV des villes avec une population minimale renseignée.")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200",
+                    description = "Le fichier CSV a été généré avec succès.",
+                    content= @Content()),
+            @ApiResponse(responseCode = "400",
+                    description = "Villes introuvables selon le critère renseigné.",
+                    content = @Content())
+    })
+    void exportVillesPopMinCSV(
+            @Parameter(description = "Valeur minimale de population des villes à récupérer.", example = "30000", required = true)int min,
+            HttpServletResponse response
+    ) throws IOException, VilleException;
 
 }
