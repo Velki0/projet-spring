@@ -165,7 +165,7 @@ public class DepartementControleur implements IDepartementControleur {
             Phrase departement = new Phrase("Département : " + codeDptm, new Font(baseFont, 14, 1, new BaseColor(0, 0, 0)));
             document.add(departement);
             document.add(Chunk.NEWLINE);
-            Phrase date = new Phrase("Date               : " + LocalDate.now(), new Font(baseFont, 14, 1, new BaseColor(0, 0, 0)));
+            Phrase date = new Phrase("Date              : " + LocalDate.now(), new Font(baseFont, 14, 1, new BaseColor(0, 0, 0)));
             document.add(date);
             document.add(Chunk.NEWLINE);
             document.add(separateur);
@@ -173,7 +173,7 @@ public class DepartementControleur implements IDepartementControleur {
 
             // Corps de Page
             int villesTotalesDB = Math.min(villesDB.size(), 15);
-            Phrase titreCorps = new Phrase("Top" + villesTotalesDB + " des Villes par ordre décroisant de population :", new Font(baseFont, 14, 1, new BaseColor(3, 34, 76)));
+            Phrase titreCorps = new Phrase("Top " + villesTotalesDB + " des Villes par ordre décroisant de population :", new Font(baseFont, 14, 1, new BaseColor(3, 34, 76)));
             document.add(titreCorps);
             PdfPTable tableauResultats = new PdfPTable(3);
             tableauResultats.setWidthPercentage(80);
