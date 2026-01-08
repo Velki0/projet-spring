@@ -19,7 +19,7 @@ import java.util.List;
 public class RegionControleur implements IRegionControleur {
 
     @Autowired
-    private IRegionService IRegionService;
+    private IRegionService regionService;
     @Autowired
     private IRegionMapper regionMapper;
 
@@ -27,7 +27,7 @@ public class RegionControleur implements IRegionControleur {
     @Override
     public ResponseEntity<List<RegionDto>> getRegions(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer taille){
 
-        Page<Region> regions = IRegionService.getAllRegions(page, taille);
+        Page<Region> regions = regionService.getAllRegions(page, taille);
         List<RegionDto> regionsDto = regions.stream().map(region -> regionMapper.toDto(region)).toList();
         return ResponseEntity.ok(regionsDto);
 

@@ -1,12 +1,12 @@
 package fr.diginamic;
 
 import fr.diginamic.entites.Region;
+import fr.diginamic.mappers.IDepartementMapper;
 import fr.diginamic.repositories.DepartementRepository;
 import fr.diginamic.repositories.RegionRepository;
 import fr.diginamic.dtos.DepartementDto;
 import fr.diginamic.dtos.RegionDto;
 import fr.diginamic.entites.Departement;
-import fr.diginamic.mappers.DepartementMapper;
 import fr.diginamic.mappers.IRegionMapper;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class InsererGeoAPI implements CommandLineRunner {
     @Autowired
     private RegionRepository regionRepository;
     @Autowired
-    private DepartementMapper departementMapper;
+    private IDepartementMapper departementMapper;
     @Autowired
     private IRegionMapper regionMapper;
 
