@@ -35,10 +35,11 @@ public class Departement {
 
     public Departement() {}
 
-    public Departement(String codeDepartement, String nom) {
+    public Departement(String codeDepartement, String nom, Region region) {
 
         this.codeDepartement = codeDepartement;
         this.nom = nom;
+        this.region = region;
 
     }
 

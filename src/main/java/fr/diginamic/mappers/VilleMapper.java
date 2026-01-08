@@ -2,6 +2,7 @@ package fr.diginamic.mappers;
 
 import fr.diginamic.dtos.VilleDto;
 import fr.diginamic.entites.Departement;
+import fr.diginamic.entites.Region;
 import fr.diginamic.entites.Ville;
 import org.springframework.stereotype.Component;
 
@@ -11,11 +12,13 @@ public class VilleMapper implements IVilleMapper {
     @Override
     public VilleDto toDto(Ville ville) {
 
-        return new VilleDto(ville.getId(),
-                            ville.getNom(),
-                            ville.getPopulation(),
-                            ville.getDepartement().getCodeDepartement(),
-                            ville.getDepartement().getNom()
+        return new VilleDto(
+                ville.getId(),
+                ville.getCodeVille(),
+                ville.getNom(),
+                ville.getPopulation(),
+                ville.getDepartement().getCodeDepartement(),
+                ville.getDepartement().getNom()
         );
 
     }
@@ -23,9 +26,11 @@ public class VilleMapper implements IVilleMapper {
     @Override
     public Ville toEntity(VilleDto villeDto) {
 
-        return new Ville(villeDto.getNom(),
-                         villeDto.getPopulation(),
-                         new Departement(villeDto.getCodeDepartement(), villeDto.getNomDepartement())
+        return new Ville(
+                villeDto.getCodeVille(),
+                villeDto.getNom(),
+                villeDto.getPopulation(),
+                new Departement(villeDto.getCodeDepartement(), villeDto.getNomDepartement(), new Region())
         );
 
     }

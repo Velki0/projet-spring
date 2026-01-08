@@ -2,6 +2,7 @@ package fr.diginamic.mappers;
 
 import fr.diginamic.dtos.DepartementDto;
 import fr.diginamic.entites.Departement;
+import fr.diginamic.entites.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,8 @@ public class DepartementMapper implements IDepartementMapper {
     @Override
     public DepartementDto toDto(Departement departement) {
 
-        return new DepartementDto(departement.getId(),
+        return new DepartementDto(
+                departement.getId(),
                 departement.getCodeDepartement(),
                 departement.getNom(),
                 departement.getVilles().stream().map(ville -> villeMapper.toDto(ville)).collect(Collectors.toSet()),
@@ -29,7 +31,11 @@ public class DepartementMapper implements IDepartementMapper {
     @Override
     public Departement toEntity(DepartementDto departementDto) {
 
-        return new Departement(departementDto.getCodeDepartement(), departementDto.getNomDepartement());
+        return new Departement(
+                departementDto.getCodeDepartement(),
+                departementDto.getNomDepartement(),
+                new Region(departementDto.getCodeRegion(), departementDto.getNomDepartement())
+        );
 
     }
 

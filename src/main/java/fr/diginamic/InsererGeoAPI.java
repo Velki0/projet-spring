@@ -1,13 +1,17 @@
 package fr.diginamic;
 
+import fr.diginamic.dtos.VilleDto;
 import fr.diginamic.entites.Region;
+import fr.diginamic.entites.Ville;
 import fr.diginamic.mappers.IDepartementMapper;
+import fr.diginamic.mappers.VilleMapper;
 import fr.diginamic.repositories.DepartementRepository;
 import fr.diginamic.repositories.RegionRepository;
 import fr.diginamic.dtos.DepartementDto;
 import fr.diginamic.dtos.RegionDto;
 import fr.diginamic.entites.Departement;
 import fr.diginamic.mappers.IRegionMapper;
+import fr.diginamic.repositories.VilleRepository;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -21,9 +25,13 @@ import org.springframework.web.client.RestTemplate;
 public class InsererGeoAPI implements CommandLineRunner {
 
     @Autowired
+    private VilleRepository villeRepository;
+    @Autowired
     private DepartementRepository departementRepository;
     @Autowired
     private RegionRepository regionRepository;
+    @Autowired
+    private VilleMapper villeMapper;
     @Autowired
     private IDepartementMapper departementMapper;
     @Autowired
@@ -39,32 +47,60 @@ public class InsererGeoAPI implements CommandLineRunner {
     @Override
     public void run(String @NonNull ... args) {
 
+        double debut = System.currentTimeMillis();
+
         RestTemplate restTemplate = new RestTemplate();
         RegionDto[] regionsGeoAPI = restTemplate.getForObject("https://geo.api.gouv.fr/regions", RegionDto[].class);
         DepartementDto[] departementsGeoAPI = restTemplate.getForObject("https://geo.api.gouv.fr/departements", DepartementDto[].class);
+        VilleDto[] villesGeoAPI = restTemplate.getForObject("https://geo.api.gouv.fr/communes", VilleDto[].class);
 
         assert regionsGeoAPI != null;
         for (RegionDto region : regionsGeoAPI) {
 
             Region regionDB = regionRepository.findByCodeRegion(region.getCodeRegion());
-            if (regionDB == null) {
+            if (regionDB != null) {
+                regionDB.setNom(region.getNomRegion());
+            } else {
                 regionRepository.save(regionMapper.toEntity(region));
             }
 
         }
 
         assert departementsGeoAPI != null;
-        for (DepartementDto dto : departementsGeoAPI) {
+        for (DepartementDto dptm : departementsGeoAPI) {
 
-            Departement departementDB = departementRepository.findByCodeDepartement(dto.getCodeDepartement());
+            Departement departementDB = departementRepository.findByCodeDepartement(dptm.getCodeDepartement());
             if (departementDB != null) {
-                departementDB.setNom(dto.getNomDepartement());
-                departementDB.setRegion(regionRepository.findByCodeRegion(dto.getCodeRegion()));
+                departementDB.setNom(dptm.getNomDepartement());
+                departementDB.setRegion(regionRepository.findByCodeRegion(dptm.getCodeRegion()));
             } else {
-                departementRepository.save(departementMapper.toEntity(dto));
+                Departement nouveauDepartement = departementMapper.toEntity(dptm);
+                nouveauDepartement.setRegion(regionRepository.findByCodeRegion(dptm.getCodeRegion()));
+                departementRepository.save(nouveauDepartement);
             }
 
         }
+
+        assert villesGeoAPI != null;
+        int i = 0;
+        for (VilleDto dto : villesGeoAPI) {
+
+            System.err.println(i++);
+            Ville villeDB = villeRepository.findByCodeVille(dto.getCodeVille());
+            if (villeDB != null) {
+                villeDB.setNom(dto.getNom());
+                villeDB.setPopulation(dto.getPopulation());
+                villeDB.setDepartement(departementRepository.findByCodeDepartement(dto.getCodeDepartement()));
+            } else {
+                Ville nouvelleVille = villeMapper.toEntity(dto);
+                nouvelleVille.setDepartement(departementRepository.findByCodeDepartement(dto.getCodeDepartement()));
+                villeRepository.save(nouvelleVille);
+            }
+
+        }
+
+        double fin = System.currentTimeMillis();
+        System.out.println("Fin du parse. Temps écoulé : " + (fin - debut) / 1000 + " secondes");
 
     }
 

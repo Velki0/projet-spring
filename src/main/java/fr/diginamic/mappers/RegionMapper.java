@@ -16,7 +16,8 @@ public class RegionMapper implements IRegionMapper {
     @Override
     public RegionDto toDto(Region region) {
 
-        return new RegionDto(region.getId(),
+        return new RegionDto(
+                region.getId(),
                 region.getCodeRegion(),
                 region.getNom(),
                 region.getDepartements().stream().map(departement -> departementMapper.toDto(departement)).collect(Collectors.toSet())
@@ -27,7 +28,10 @@ public class RegionMapper implements IRegionMapper {
     @Override
     public Region toEntity(RegionDto regionDto) {
 
-        return new Region(regionDto.getCodeRegion(), regionDto.getNomRegion());
+        return new Region(
+                regionDto.getCodeRegion(),
+                regionDto.getNomRegion()
+        );
 
     }
 

@@ -10,6 +10,8 @@ public interface VilleRepository extends JpaRepository<Ville,Integer> {
 
     Ville findById(int id);
 
+    Ville findByCodeVille(String codeVille);
+
     Ville findByNom(String nom);
 
     // Recherche de toutes les villes dont le nom commence par une chaine de caractères donnée.

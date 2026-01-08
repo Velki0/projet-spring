@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+import java.util.Objects;
+
 @Entity
 public class Ville {
 
@@ -15,6 +17,9 @@ public class Ville {
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name = "CODE_VILLE")
+    private String codeVille;
 
     @Column(name = "NOM")
     private String nom;
@@ -28,28 +33,24 @@ public class Ville {
 
     public Ville() {}
 
-    public Ville(String nom, int population, Departement departement) {
+    public Ville(String codeVille, String nom, Integer population, Departement departement) {
 
+        this.codeVille = codeVille;
         this.nom = nom;
-        this.population = population;
+        this.population = Objects.requireNonNullElse(population, 0);
         this.departement = departement;
 
     }
 
     public int getId() { return id; }
+    public String getCodeVille() { return codeVille; }
     public String getNom() { return nom; }
     public int getPopulation() { return population; }
     public Departement getDepartement() { return departement; }
 
+    public void setCodeVille(String codeVille) { this.codeVille = codeVille; }
     public void setNom(String nom) { this.nom = nom; }
     public void setPopulation(int population) { this.population = population; }
     public void setDepartement(Departement departement) { this.departement = departement; }
-
-    @Override
-    public String toString() {
-
-        return "{" +id + ", " + nom + ", " + population + ", " + departement.getCodeDepartement() + ", " + departement.getNom() + "}";
-
-    }
 
 }
