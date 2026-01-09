@@ -25,7 +25,7 @@ public class VilleServiceTest {
 
     @Transactional
     @Test
-    public void getVilleById() throws VilleException {
+    public void testGetVilleById() throws VilleException {
 
         Ville montpellier = new Ville("34520", "Montpellier", 235000, new Departement("34", "Hérault", new Region()));
         Ville lyon = new Ville("69123", "Lyon", 553000, new Departement("69", "Rhône", new Region()));
