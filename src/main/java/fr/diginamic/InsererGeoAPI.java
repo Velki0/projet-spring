@@ -55,48 +55,54 @@ public class InsererGeoAPI implements CommandLineRunner {
         VilleDto[] villesGeoAPI = restTemplate.getForObject("https://geo.api.gouv.fr/communes", VilleDto[].class);
 
         assert regionsGeoAPI != null;
-        for (RegionDto region : regionsGeoAPI) {
+        if(regionsGeoAPI.length != regionRepository.count()) {
+            for (RegionDto region : regionsGeoAPI) {
 
-            Region regionDB = regionRepository.findByCodeRegion(region.getCodeRegion());
-            if (regionDB != null) {
-                regionDB.setNom(region.getNomRegion());
-            } else {
-                regionRepository.save(regionMapper.toEntity(region));
+                Region regionDB = regionRepository.findByCodeRegion(region.getCodeRegion());
+                if (regionDB != null) {
+                    regionDB.setNom(region.getNomRegion());
+                } else {
+                    regionRepository.save(regionMapper.toEntity(region));
+                }
+
             }
-
         }
 
         assert departementsGeoAPI != null;
-        for (DepartementDto dptm : departementsGeoAPI) {
+        if(departementsGeoAPI.length != departementRepository.count()) {
+            for (DepartementDto dptm : departementsGeoAPI) {
 
-            Departement departementDB = departementRepository.findByCodeDepartement(dptm.getCodeDepartement());
-            if (departementDB != null) {
-                departementDB.setNom(dptm.getNomDepartement());
-                departementDB.setRegion(regionRepository.findByCodeRegion(dptm.getCodeRegion()));
-            } else {
-                Departement nouveauDepartement = departementMapper.toEntity(dptm);
-                nouveauDepartement.setRegion(regionRepository.findByCodeRegion(dptm.getCodeRegion()));
-                departementRepository.save(nouveauDepartement);
+                Departement departementDB = departementRepository.findByCodeDepartement(dptm.getCodeDepartement());
+                if (departementDB != null) {
+                    departementDB.setNom(dptm.getNomDepartement());
+                    departementDB.setRegion(regionRepository.findByCodeRegion(dptm.getCodeRegion()));
+                } else {
+                    Departement nouveauDepartement = departementMapper.toEntity(dptm);
+                    nouveauDepartement.setRegion(regionRepository.findByCodeRegion(dptm.getCodeRegion()));
+                    departementRepository.save(nouveauDepartement);
+                }
+
             }
-
         }
 
         assert villesGeoAPI != null;
-        int i = 0;
-        for (VilleDto dto : villesGeoAPI) {
+        if(villesGeoAPI.length != villeRepository.count()) {
+            int i = 0;
+            for (VilleDto dto : villesGeoAPI) {
 
-            System.err.println(i++);
-            Ville villeDB = villeRepository.findByCodeVille(dto.getCodeVille());
-            if (villeDB != null) {
-                villeDB.setNom(dto.getNom());
-                villeDB.setPopulation(dto.getPopulation());
-                villeDB.setDepartement(departementRepository.findByCodeDepartement(dto.getCodeDepartement()));
-            } else {
-                Ville nouvelleVille = villeMapper.toEntity(dto);
-                nouvelleVille.setDepartement(departementRepository.findByCodeDepartement(dto.getCodeDepartement()));
-                villeRepository.save(nouvelleVille);
+                System.err.println(i++);
+                Ville villeDB = villeRepository.findByCodeVille(dto.getCodeVille());
+                if (villeDB != null) {
+                    villeDB.setNom(dto.getNom());
+                    villeDB.setPopulation(dto.getPopulation());
+                    villeDB.setDepartement(departementRepository.findByCodeDepartement(dto.getCodeDepartement()));
+                } else {
+                    Ville nouvelleVille = villeMapper.toEntity(dto);
+                    nouvelleVille.setDepartement(departementRepository.findByCodeDepartement(dto.getCodeDepartement()));
+                    villeRepository.save(nouvelleVille);
+                }
+
             }
-
         }
 
         double fin = System.currentTimeMillis();

@@ -1,5 +1,15 @@
 package fr.diginamic.entites;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,11 +19,27 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
 public class Utilisateur implements UserDetails {
 
-    private final String username;
-    private final String password;
+    @Id
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "USERNAME")
+    private String username;
+
+    @Column(name = "PASSWORD")
+    private String password;
+
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @JoinTable(name = "UTILISATEURS_ROLES",
+               joinColumns = @JoinColumn(name = "UTILISATEUR_ID"),
+               inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
     private final Set<Role> roles = new HashSet<>();
+
+    public Utilisateur() {}
 
     public Utilisateur(String username, String password, Role role) {
 
