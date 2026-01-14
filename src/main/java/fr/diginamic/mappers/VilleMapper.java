@@ -12,14 +12,25 @@ public class VilleMapper implements IVilleMapper {
     @Override
     public VilleDto toDto(Ville ville) {
 
-        return new VilleDto(
-                ville.getId(),
-                ville.getCodeVille(),
-                ville.getNom(),
-                ville.getPopulation(),
-                ville.getDepartement().getCodeDepartement(),
-                ville.getDepartement().getNom()
-        );
+        if (ville.getDepartement() != null) {
+            return new VilleDto(
+                    ville.getId(),
+                    ville.getCodeVille(),
+                    ville.getNom(),
+                    ville.getPopulation(),
+                    ville.getDepartement().getCodeDepartement(),
+                    ville.getDepartement().getNom()
+            );
+        } else {
+            return new VilleDto(
+                    ville.getId(),
+                    ville.getCodeVille(),
+                    ville.getNom(),
+                    ville.getPopulation(),
+                    null,
+                    null
+            );
+        }
 
     }
 

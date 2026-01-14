@@ -18,14 +18,14 @@ public class Ville {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "CODE_VILLE")
+    @Column(name = "CODE_VILLE", unique = true, nullable = false)
     private String codeVille;
 
     @Column(name = "NOM")
     private String nom;
 
     @Column(name = "POPULATION")
-    private int population;
+    private Integer population;
 
     @ManyToOne
     @JoinColumn(name = "DEPARTEMENT_ID")
@@ -45,12 +45,12 @@ public class Ville {
     public int getId() { return id; }
     public String getCodeVille() { return codeVille; }
     public String getNom() { return nom; }
-    public int getPopulation() { return population; }
+    public Integer getPopulation() { return population; }
     public Departement getDepartement() { return departement; }
 
     public void setCodeVille(String codeVille) { this.codeVille = codeVille; }
     public void setNom(String nom) { this.nom = nom; }
-    public void setPopulation(int population) { this.population = population; }
+    public void setPopulation(Integer population) { this.population = population; }
     public void setDepartement(Departement departement) { this.departement = departement; }
 
 }
