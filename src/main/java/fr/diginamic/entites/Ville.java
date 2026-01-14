@@ -8,8 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-import java.util.Objects;
-
 @Entity
 public class Ville {
 
@@ -37,7 +35,7 @@ public class Ville {
 
         this.codeVille = codeVille;
         this.nom = nom;
-        this.population = Objects.requireNonNullElse(population, 0);
+        this.population = population;
         this.departement = departement;
 
     }
