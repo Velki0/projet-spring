@@ -2,7 +2,6 @@ package fr.diginamic.entites;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,7 +31,7 @@ public class Utilisateur implements UserDetails {
     @Column(name = "PASSWORD")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "UTILISATEURS_ROLES",
                joinColumns = @JoinColumn(name = "UTILISATEUR_ID"),
                inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))

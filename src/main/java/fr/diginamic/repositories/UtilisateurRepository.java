@@ -1,12 +1,14 @@
 package fr.diginamic.repositories;
 
 import fr.diginamic.entites.Utilisateur;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
 public interface UtilisateurRepository extends JpaRepository<Utilisateur,Integer> {
 
+    @EntityGraph(attributePaths = {"roles"})
     Optional<Utilisateur> findByUsername(String username);
 
 }

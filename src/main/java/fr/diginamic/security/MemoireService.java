@@ -14,8 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -31,15 +30,12 @@ public class MemoireService implements UserDetailsService {
     @Override
     public @NullMarked UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        List<Utilisateur> utilisateursDB = utilisateurRepository.findAll();
-        for (Utilisateur utilisateur : utilisateursDB) {
-            if (Objects.equals(utilisateur.getUsername(), username)) {
-
-                return utilisateur;
-
-            }
+        Optional<Utilisateur> utilisateurDB = utilisateurRepository.findByUsername(username);
+        if (utilisateurDB.isPresent()) {
+            return utilisateurDB.get();
+        } else {
+            throw new UsernameNotFoundException("Ce username n'existe pas.");
         }
-        throw new UsernameNotFoundException("Ce username n'existe pas.");
 
     }
 
