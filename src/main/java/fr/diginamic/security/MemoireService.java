@@ -56,16 +56,16 @@ public class MemoireService implements UserDetailsService {
                                               new Role("ROLE_USER"))
                                       );
         utilisateurRepository.findByUsername("admin")
-                             .orElseGet(() -> utilisateurRepository.save(
-                                        new Utilisateur("admin",
-                                        encoder.encode("1234"),
-                                        Set.of(roleAdmin, roleUser)))
+                             .orElseGet(() -> utilisateurRepository.save(new Utilisateur(
+                                     "admin",
+                                     encoder.encode("1234"),
+                                     Set.of(roleAdmin, roleUser)))
                              );
         utilisateurRepository.findByUsername("user")
-                             .orElseGet(()-> utilisateurRepository.save(
-                                        new Utilisateur("user",
-                                        encoder.encode("ouioui"),
-                                        Set.of(roleUser)))
+                             .orElseGet(()-> utilisateurRepository.save(new Utilisateur(
+                                     "user",
+                                     encoder.encode("ouioui"),
+                                     Set.of(roleUser)))
                              );
 
     }
