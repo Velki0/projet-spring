@@ -3,8 +3,10 @@ package fr.diginamic.repositories;
 import fr.diginamic.entites.Utilisateur;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface UtilisateurRepository extends JpaRepository<Utilisateur,Integer> {
 
-    Utilisateur findByUsername(String username);
+    Optional<Utilisateur> findByUsername(String username);
 
 }

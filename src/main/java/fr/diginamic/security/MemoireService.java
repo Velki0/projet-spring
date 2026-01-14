@@ -39,7 +39,6 @@ public class MemoireService implements UserDetailsService {
 
             }
         }
-
         throw new UsernameNotFoundException("Ce username n'existe pas.");
 
     }
@@ -48,14 +47,26 @@ public class MemoireService implements UserDetailsService {
     @PostConstruct
     public void chargerUtilisateurs() {
 
-        if (Objects.requireNonNull(utilisateurRepository.findAll()).isEmpty()) {
-
-            Role roleAdmin = roleRepository.findByNom("ROLE_ADMIN").orElseGet(() -> roleRepository.save(new Role("ROLE_ADMIN")));
-            Role roleUser = roleRepository.findByNom("ROLE_USER").orElseGet(() -> roleRepository.save(new Role("ROLE_USER")));
-            utilisateurRepository.save(new Utilisateur("admin", encoder.encode("1234"), Set.of(roleAdmin, roleUser)));
-            utilisateurRepository.save(new Utilisateur("user", encoder.encode("ouioui"), Set.of(roleUser)));
-
-        }
+        Role roleAdmin = roleRepository.findByNom("ROLE_ADMIN")
+                                       .orElseGet(() -> roleRepository.save(
+                                               new Role("ROLE_ADMIN"))
+                                       );
+        Role roleUser = roleRepository.findByNom("ROLE_USER")
+                                      .orElseGet(() -> roleRepository.save(
+                                              new Role("ROLE_USER"))
+                                      );
+        utilisateurRepository.findByUsername("admin")
+                             .orElseGet(() -> utilisateurRepository.save(
+                                        new Utilisateur("admin",
+                                        encoder.encode("1234"),
+                                        Set.of(roleAdmin, roleUser)))
+                             );
+        utilisateurRepository.findByUsername("user")
+                             .orElseGet(()-> utilisateurRepository.save(
+                                        new Utilisateur("user",
+                                        encoder.encode("ouioui"),
+                                        Set.of(roleUser)))
+                             );
 
     }
 
