@@ -48,13 +48,9 @@ public class MemoireService implements UserDetailsService {
     public void chargerUtilisateurs() {
 
         Role roleAdmin = roleRepository.findByNom("ROLE_ADMIN")
-                                       .orElseGet(() -> roleRepository.save(
-                                               new Role("ROLE_ADMIN"))
-                                       );
+                                       .orElseGet(() -> roleRepository.save(new Role("ROLE_ADMIN")));
         Role roleUser = roleRepository.findByNom("ROLE_USER")
-                                      .orElseGet(() -> roleRepository.save(
-                                              new Role("ROLE_USER"))
-                                      );
+                                      .orElseGet(() -> roleRepository.save(new Role("ROLE_USER")));
         utilisateurRepository.findByUsername("admin")
                              .orElseGet(() -> utilisateurRepository.save(new Utilisateur(
                                      "admin",
