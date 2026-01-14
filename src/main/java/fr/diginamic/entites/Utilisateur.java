@@ -1,6 +1,5 @@
 package fr.diginamic.entites;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,7 +32,7 @@ public class Utilisateur implements UserDetails {
     @Column(name = "PASSWORD")
     private String password;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "UTILISATEURS_ROLES",
                joinColumns = @JoinColumn(name = "UTILISATEUR_ID"),
                inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
@@ -41,11 +40,11 @@ public class Utilisateur implements UserDetails {
 
     public Utilisateur() {}
 
-    public Utilisateur(String username, String password, Role role) {
+    public Utilisateur(String username, String password, Set<Role> roles) {
 
         this.username = username;
         this.password = password;
-        roles.add(role);
+        this.roles.addAll(roles);
 
     }
 

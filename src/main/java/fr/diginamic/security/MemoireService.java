@@ -2,6 +2,7 @@ package fr.diginamic.security;
 
 import fr.diginamic.entites.Role;
 import fr.diginamic.entites.Utilisateur;
+import fr.diginamic.repositories.RoleRepository;
 import fr.diginamic.repositories.UtilisateurRepository;
 import jakarta.annotation.PostConstruct;
 import org.jspecify.annotations.NullMarked;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 public class MemoireService implements UserDetailsService {
@@ -23,6 +25,8 @@ public class MemoireService implements UserDetailsService {
     private PasswordEncoder encoder;
     @Autowired
     private UtilisateurRepository utilisateurRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Override
     public @NullMarked UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -46,8 +50,10 @@ public class MemoireService implements UserDetailsService {
 
         if (Objects.requireNonNull(utilisateurRepository.findAll()).isEmpty()) {
 
-            utilisateurRepository.save(new Utilisateur("admin", encoder.encode("1234"), new Role("ROLE_ADMIN")));
-            utilisateurRepository.save(new Utilisateur("user", encoder.encode("ouioui"), new Role("ROLE_USER")));
+            Role roleAdmin = roleRepository.findByNom("ROLE_ADMIN").orElseGet(() -> roleRepository.save(new Role("ROLE_ADMIN")));
+            Role roleUser = roleRepository.findByNom("ROLE_USER").orElseGet(() -> roleRepository.save(new Role("ROLE_USER")));
+            utilisateurRepository.save(new Utilisateur("admin", encoder.encode("1234"), Set.of(roleAdmin, roleUser)));
+            utilisateurRepository.save(new Utilisateur("user", encoder.encode("ouioui"), Set.of(roleUser)));
 
         }
 
