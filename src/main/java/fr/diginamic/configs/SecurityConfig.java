@@ -56,7 +56,7 @@ public class SecurityConfig {
         // Tous les headers utiles (JWT, JSON, etc.)
         configuration.setAllowedHeaders(List.of("*"));
 
-        // Si tu utilises Authorization / cookies
+        // Authorization / cookies
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
