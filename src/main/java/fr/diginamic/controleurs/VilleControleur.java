@@ -203,7 +203,7 @@ public class VilleControleur implements IVilleControleur {
                         .append(";")
                         .append(ville.getCodeDepartement())
                         .append(";")
-                        .append(ville.getNom())
+                        .append(ville.getNomDepartement())
                         .append("\n");
             }
             response.flushBuffer();
