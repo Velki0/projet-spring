@@ -30,10 +30,19 @@ public class VilleDto {
     @Size(min = 2, message = "de la ville doit contenir au moins 2 caractères.")
     private final String codeDepartement;
 
+    @NotNull
     @Size(min = 2, message = "de la ville doit contenir au moins 2 lettres.")
     private final String nomDepartement;
 
-    public VilleDto(Integer id, String codeVille, String nom, Integer population, String codeDepartement, String nomDepartement) {
+    @NotNull
+    @Size(min = 2, message = "de la ville doit contenir au moins 2 caractères.")
+    private final String codeRegion;
+
+    @NotNull
+    @Size(min = 2, message = "de la ville doit contenir au moins 2 lettres.")
+    private final String nomRegion;
+
+    public VilleDto(Integer id, String codeVille, String nom, Integer population, String codeDepartement, String nomDepartement, String codeRegion, String nomRegion) {
 
         this.id = id;
         this.codeVille = codeVille;
@@ -41,6 +50,8 @@ public class VilleDto {
         this.population = population;
         this.codeDepartement = codeDepartement;
         this.nomDepartement = nomDepartement;
+        this.codeRegion = codeRegion;
+        this.nomRegion = nomRegion;
 
     }
 
@@ -50,5 +61,7 @@ public class VilleDto {
     public Integer getPopulation() { return population; }
     public String getCodeDepartement() { return codeDepartement; }
     public String getNomDepartement() { return nomDepartement; }
+    public String getCodeRegion() { return codeRegion; }
+    public String getNomRegion() { return nomRegion; }
 
 }

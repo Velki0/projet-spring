@@ -21,7 +21,7 @@ public class Ville {
     @Column(name = "CODE_VILLE", unique = true, nullable = false)
     private String codeVille;
 
-    @Column(name = "NOM")
+    @Column(name = "NOM", unique = true, nullable = false)
     private String nom;
 
     @Column(name = "POPULATION")

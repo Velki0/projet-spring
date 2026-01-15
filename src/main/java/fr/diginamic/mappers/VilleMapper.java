@@ -12,14 +12,16 @@ public class VilleMapper implements IVilleMapper {
     @Override
     public VilleDto toDto(Ville ville) {
 
-        if (ville.getDepartement() != null) {
+        if (ville.getDepartement() != null && ville.getDepartement().getRegion() != null) {
             return new VilleDto(
                     ville.getId(),
                     ville.getCodeVille(),
                     ville.getNom(),
                     ville.getPopulation(),
                     ville.getDepartement().getCodeDepartement(),
-                    ville.getDepartement().getNom()
+                    ville.getDepartement().getNom(),
+                    ville.getDepartement().getRegion().getCodeRegion(),
+                    ville.getDepartement().getRegion().getNom()
             );
         } else {
             return new VilleDto(
@@ -27,6 +29,8 @@ public class VilleMapper implements IVilleMapper {
                     ville.getCodeVille(),
                     ville.getNom(),
                     ville.getPopulation(),
+                    null,
+                    null,
                     null,
                     null
             );
@@ -41,7 +45,7 @@ public class VilleMapper implements IVilleMapper {
                 villeDto.getCodeVille(),
                 villeDto.getNom(),
                 villeDto.getPopulation(),
-                new Departement(villeDto.getCodeDepartement(), villeDto.getNomDepartement(), new Region())
+                new Departement(villeDto.getCodeDepartement(), villeDto.getNomDepartement(), new Region(villeDto.getCodeRegion(), villeDto.getNomRegion()))
         );
 
     }

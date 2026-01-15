@@ -7,4 +7,6 @@ public interface IRegionService {
 
     Page<Region> getAllRegions(Integer page, Integer taille);
 
+    Region addRegionDeDepartement(Region region);
+
 }

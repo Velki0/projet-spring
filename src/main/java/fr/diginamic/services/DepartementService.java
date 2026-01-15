@@ -20,8 +20,10 @@ public class DepartementService implements IDepartementService {
 
     @Autowired
     private DepartementRepository departementRepository;
+    @Autowired
+    private IRegionService regionService;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("LoggerRecensement");
+    private static final Logger LOGGER = LoggerFactory.getLogger(DepartementService.class);
 
     @Override
     public Page<Departement> getAllDepartements(Integer page, Integer taille){
@@ -114,6 +116,7 @@ public class DepartementService implements IDepartementService {
             departementDB.setCodeDepartement(departement.getCodeDepartement());
             departementDB.setNom(departement.getNom());
             departementDB.setVilles(departement.getVilles());
+            departementDB.setRegion(regionService.addRegionDeDepartement(departement.getRegion()));
             departementDB.setUserMaj(auth.getName());
             departementDB.setDateMaj(LocalDateTime.now());
             LOGGER.info("L'utilisateur {} a modifié le département avec l'id {}.", auth.getName(), departementDB.getId());

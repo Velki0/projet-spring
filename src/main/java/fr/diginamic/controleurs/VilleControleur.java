@@ -5,12 +5,14 @@ import fr.diginamic.entites.Ville;
 import fr.diginamic.exceptions.VilleException;
 import fr.diginamic.mappers.IVilleMapper;
 import fr.diginamic.services.IDepartementService;
+import fr.diginamic.services.IRegionService;
 import fr.diginamic.services.IVilleService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
@@ -38,6 +40,8 @@ public class VilleControleur implements IVilleControleur {
     private IVilleService villeService;
     @Autowired
     private IDepartementService departementService;
+    @Autowired
+    private IRegionService regionService;
     @Autowired
     private IVilleMapper villeMapper;
 
@@ -136,6 +140,7 @@ public class VilleControleur implements IVilleControleur {
             throw new VilleException(messageErreur);
         }
         Ville ville = villeMapper.toEntity(villeDto);
+        ville.getDepartement().setRegion(regionService.addRegionDeDepartement(ville.getDepartement().getRegion()));
         ville.setDepartement(departementService.addDepartementDeVille(ville.getDepartement()));
         villeService.addVille(ville);
         return ResponseEntity.status(HttpStatus.CREATED).body("La ville de : " + ville.getNom() + " a été créée avec succès.");
@@ -153,6 +158,7 @@ public class VilleControleur implements IVilleControleur {
             throw new VilleException(messageErreur);
         }
         Ville ville = villeMapper.toEntity(villeDto);
+        ville.getDepartement().setRegion(regionService.addRegionDeDepartement(ville.getDepartement().getRegion()));
         ville.setDepartement(departementService.addDepartementDeVille(ville.getDepartement()));
         villeService.updateVille(id, ville);
         return ResponseEntity.ok("La ville de " + ville.getNom() + " a bien été modifiée.");
@@ -168,23 +174,24 @@ public class VilleControleur implements IVilleControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN"})
     @GetMapping("/fiche/{min}")
     @Override
     public void exportVillesPopMinCSV(@PathVariable int min, HttpServletResponse response) throws IOException, VilleException {
 
         response.setHeader("Content-Disposition", "attachment; filename=\"villesavecaumoins" + min + "habitants.csv\"");
         response.getWriter().append("Nom de la ville;Nombre d’habitants;Code département;Nom du département\n");
-        List<Ville> villesDB = villeService.getVillesPopulationMin(min);
+        List<VilleDto> villesDB = villeService.getVillesPopulationMin(min).stream().map(ville -> villeMapper.toDto(ville)).toList();
         if (!villesDB.isEmpty()) {
-            for (Ville ville : villesDB) {
+            for (VilleDto ville : villesDB) {
                 response.getWriter()
                         .append(ville.getNom())
                         .append(";")
                         .append(Integer.toString(ville.getPopulation()))
                         .append(";")
-                        .append(ville.getDepartement().getCodeDepartement())
+                        .append(ville.getCodeDepartement())
                         .append(";")
-                        .append(ville.getDepartement().getNom())
+                        .append(ville.getNom())
                         .append("\n");
             }
             response.flushBuffer();

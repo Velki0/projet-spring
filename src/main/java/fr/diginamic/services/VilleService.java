@@ -22,7 +22,7 @@ public class VilleService implements IVilleService {
     @Autowired
     private VilleRepository villeRepository;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("LoggerRecensement");
+    private static final Logger LOGGER = LoggerFactory.getLogger(VilleService.class);
 
     @Override
     public Page<Ville> getAllVilles(Integer page, Integer taille) {

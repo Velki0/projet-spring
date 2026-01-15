@@ -34,7 +34,7 @@ public class DepartementMapper implements IDepartementMapper {
         return new Departement(
                 departementDto.getCodeDepartement(),
                 departementDto.getNomDepartement(),
-                new Region(departementDto.getCodeRegion(), departementDto.getNomDepartement())
+                new Region(departementDto.getCodeRegion(), departementDto.getNomRegion())
         );
 
     }

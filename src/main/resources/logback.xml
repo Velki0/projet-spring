@@ -16,11 +16,11 @@
         </encoder>
     </appender>
 
-    <logger name="LoggerRecensement" level="INFO">
+    <logger name="fr.diginamic" level="INFO">
         <appender-ref ref="FILE" />
     </logger>
 
-    <root level="ERROR">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
 

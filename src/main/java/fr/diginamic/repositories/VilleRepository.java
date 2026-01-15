@@ -1,6 +1,7 @@
 package fr.diginamic.repositories;
 
 import fr.diginamic.entites.Ville;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -8,10 +9,13 @@ import java.util.List;
 
 public interface VilleRepository extends JpaRepository<Ville,Integer> {
 
+    @EntityGraph("departement")
     Ville findById(int id);
 
+    @EntityGraph("departement")
     Ville findByCodeVille(String codeVille);
 
+    @EntityGraph("departement")
     Ville findByNom(String nom);
 
     // Recherche de toutes les villes dont le nom commence par une chaine de caractères donnée.

@@ -30,8 +30,12 @@ public class DepartementDto {
 
     private final Set<String> nomsVilles = new HashSet<>();
 
+    @NotNull
+    @Size(min = 2, message = "du département doit avoir un nom contenant au moins 2 lettres.")
     private final String codeRegion;
 
+    @NotNull
+    @Size(min = 2, message = "du département doit avoir un nom contenant au moins 2 lettres.")
     private final String nomRegion;
 
     public DepartementDto(Integer id, String codeDepartement, String nomDepartement, Set<VilleDto> villesDto, String codeRegion, String nomRegion) {

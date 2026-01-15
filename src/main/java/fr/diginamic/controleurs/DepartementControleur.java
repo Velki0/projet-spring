@@ -17,6 +17,7 @@ import fr.diginamic.exceptions.DepartementException;
 import fr.diginamic.exceptions.VilleException;
 import fr.diginamic.mappers.IDepartementMapper;
 import fr.diginamic.services.IDepartementService;
+import fr.diginamic.services.IRegionService;
 import fr.diginamic.services.IVilleService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,8 @@ public class DepartementControleur implements IDepartementControleur {
     private IVilleService villeService;
     @Autowired
     private IDepartementService departementService;
+    @Autowired
+    private IRegionService regionService;
     @Autowired
     private IDepartementMapper departementMapper;
 
@@ -105,6 +108,7 @@ public class DepartementControleur implements IDepartementControleur {
             throw new DepartementException(messageErreur);
         }
         Departement departement = departementMapper.toEntity(departementDto);
+        departement.setRegion(regionService.addRegionDeDepartement(departement.getRegion()));
         departementService.addDepartement(departement);
         return ResponseEntity.status(HttpStatus.CREATED).body("Le département : " + departement.getNom() + " a été créée avec succès.");
 
@@ -121,6 +125,7 @@ public class DepartementControleur implements IDepartementControleur {
             throw new DepartementException(messageErreur);
         }
         Departement departement = departementMapper.toEntity(departementDto);
+        departement.setRegion(regionService.addRegionDeDepartement(departement.getRegion()));
         departementService.updateDepartement(id, departement);
         return ResponseEntity.ok("Le département : " + departement.getNom() + " a bien été modifiée.");
 
