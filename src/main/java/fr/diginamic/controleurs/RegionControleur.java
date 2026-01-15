@@ -7,6 +7,7 @@ import fr.diginamic.services.IRegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +24,7 @@ public class RegionControleur implements IRegionControleur {
     @Autowired
     private IRegionMapper regionMapper;
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping
     @Override
     public ResponseEntity<List<RegionDto>> getRegions(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer taille){

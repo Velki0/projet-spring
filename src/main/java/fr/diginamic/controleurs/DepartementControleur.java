@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
@@ -57,6 +58,7 @@ public class DepartementControleur implements IDepartementControleur {
     @Autowired
     private IDepartementMapper departementMapper;
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping
     @Override
     public ResponseEntity<List<DepartementDto>> getDepartements(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer taille){
@@ -67,6 +69,7 @@ public class DepartementControleur implements IDepartementControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(path = "/byId/{id}")
     @Override
     public ResponseEntity<DepartementDto> getDepartementsById(@PathVariable int id) throws DepartementException {
@@ -77,6 +80,7 @@ public class DepartementControleur implements IDepartementControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(path = "/byNom/{nom}")
     @Override
     public ResponseEntity<DepartementDto> getDepartementsByNom(@PathVariable String nom) throws DepartementException {
@@ -87,6 +91,7 @@ public class DepartementControleur implements IDepartementControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(path = "/byCode/{codeDptm}")
     @Override
     public ResponseEntity<DepartementDto> getDepartementsByCode(@PathVariable String codeDptm) throws DepartementException {
@@ -97,6 +102,7 @@ public class DepartementControleur implements IDepartementControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN"})
     @PostMapping(path = "/ajouter")
     @Override
     public ResponseEntity<String> addDepartement(@RequestBody DepartementDto departementDto) throws DepartementException {
@@ -114,6 +120,7 @@ public class DepartementControleur implements IDepartementControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN"})
     @PutMapping(path = "/modifier/{id}")
     @Override
     public ResponseEntity<String> updateDepartement(@PathVariable int id, @RequestBody DepartementDto departementDto) throws DepartementException {
@@ -131,6 +138,7 @@ public class DepartementControleur implements IDepartementControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN"})
     @DeleteMapping(path = "/supprimer/{id}")
     @Override
     public ResponseEntity<String> deleteDepartement(@PathVariable int id) throws DepartementException {
@@ -146,7 +154,7 @@ public class DepartementControleur implements IDepartementControleur {
 
     }
 
-    @GetMapping("/fiche/{codeDptm}")
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @Override
     public void exportDepartementPDF(@PathVariable String codeDptm, HttpServletResponse response) throws IOException, DocumentException, VilleException, DepartementException {
 

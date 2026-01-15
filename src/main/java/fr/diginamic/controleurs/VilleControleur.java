@@ -45,6 +45,7 @@ public class VilleControleur implements IVilleControleur {
     @Autowired
     private IVilleMapper villeMapper;
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping
     @Override
     public ResponseEntity<List<VilleDto>> getVilles(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer taille) {
@@ -55,6 +56,7 @@ public class VilleControleur implements IVilleControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(path = "/byId/{id}")
     @Override
     public ResponseEntity<VilleDto> getVilleById(@PathVariable int id) throws VilleException {
@@ -65,6 +67,7 @@ public class VilleControleur implements IVilleControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(path = "/byNom/{nom}")
     @Override
     public ResponseEntity<VilleDto> getVillesByNom(@PathVariable String nom) throws VilleException {
@@ -75,6 +78,7 @@ public class VilleControleur implements IVilleControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(path = "/contenir/{nom}")
     @Override
     public ResponseEntity<List<VilleDto>> getVillesContientNom(@PathVariable String nom) throws VilleException {
@@ -84,6 +88,7 @@ public class VilleControleur implements IVilleControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(path = "/popMin")
     @Override
     public ResponseEntity<List<VilleDto>> getVillesPopMin(@RequestParam int min) throws VilleException {
@@ -93,6 +98,7 @@ public class VilleControleur implements IVilleControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(path = "/popBetween")
     @Override
     public ResponseEntity<List<VilleDto>> getVillesPopBetween(@RequestParam int min, @RequestParam int max) throws VilleException {
@@ -102,6 +108,7 @@ public class VilleControleur implements IVilleControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(path = "/popMinFromDptm")
     @Override
     public ResponseEntity<List<VilleDto>> getVillesFromDptmPopMin(@RequestParam int min, @RequestParam String codeDptm) throws VilleException {
@@ -111,6 +118,7 @@ public class VilleControleur implements IVilleControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(path = "/popBetweenFromDptm")
     @Override
     public ResponseEntity<List<VilleDto>> getVillesFromDptmPopBetween(@RequestParam int min, @RequestParam int max, @RequestParam String codeDptm) throws VilleException {
@@ -120,6 +128,7 @@ public class VilleControleur implements IVilleControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(path = "/nPlusGrandesFromDptm")
     @Override
     public ResponseEntity<List<VilleDto>> getNPlusGrandesVillesFromDptm(@RequestParam int top, @RequestParam String codeDptm) throws VilleException {
@@ -129,6 +138,7 @@ public class VilleControleur implements IVilleControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN"})
     @PostMapping(path = "/ajouter")
     @Override
     public ResponseEntity<String> addVille(@RequestBody VilleDto villeDto) throws VilleException {
@@ -147,6 +157,7 @@ public class VilleControleur implements IVilleControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN"})
     @PutMapping(path = "/modifier/{id}")
     @Override
     public ResponseEntity<String> updateVille(@PathVariable int id, @RequestBody VilleDto villeDto) throws VilleException {
@@ -165,6 +176,7 @@ public class VilleControleur implements IVilleControleur {
 
     }
 
+    @Secured({"ROLE_ADMIN"})
     @DeleteMapping(path = "/supprimer/{id}")
     @Override
     public ResponseEntity<String> deleteVille(@PathVariable int id) throws VilleException {
@@ -174,7 +186,7 @@ public class VilleControleur implements IVilleControleur {
 
     }
 
-    @Secured({"ROLE_ADMIN"})
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping("/fiche/{min}")
     @Override
     public void exportVillesPopMinCSV(@PathVariable int min, HttpServletResponse response) throws IOException, VilleException {
