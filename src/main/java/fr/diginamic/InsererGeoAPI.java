@@ -13,6 +13,8 @@ import fr.diginamic.entites.Departement;
 import fr.diginamic.mappers.IRegionMapper;
 import fr.diginamic.repositories.VilleRepository;
 import org.jspecify.annotations.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.WebApplicationType;
@@ -36,6 +38,8 @@ public class InsererGeoAPI implements CommandLineRunner {
     private IDepartementMapper departementMapper;
     @Autowired
     private IRegionMapper regionMapper;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("LoggerGeoAPI");
 
     public static void main(String[] args) {
 
@@ -90,7 +94,7 @@ public class InsererGeoAPI implements CommandLineRunner {
             int i = 0;
             for (VilleDto dto : villesGeoAPI) {
 
-                System.err.println(i++);
+                LOGGER.info("Parsing de la ville numéro : {}", i++);
                 Ville villeDB = villeRepository.findByCodeVille(dto.getCodeVille());
                 if (villeDB != null) {
                     villeDB.setNom(dto.getNom());
@@ -106,7 +110,7 @@ public class InsererGeoAPI implements CommandLineRunner {
         }
 
         double fin = System.currentTimeMillis();
-        System.out.println("Fin du parse. Temps écoulé : " + (fin - debut) / 1000 + " secondes");
+        LOGGER.info("Fin du parse de GeoAPI. Temps écoulé : {} secondes", (fin - debut) / 1000);
 
     }
 

@@ -16,8 +16,21 @@
         </encoder>
     </appender>
 
-    <logger name="fr.diginamic" level="INFO">
+    <appender name="FILE-PARSING-GEOAPI" class="ch.qos.logback.core.FileAppender">
+        <file>parsingGeoAPI.log</file>
+        <append>true</append>
+        <immediateFlush>true</immediateFlush>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="fr.diginamic.services" level="INFO">
         <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="LoggerGeoAPI" level="INFO">
+        <appender-ref ref="FILE-PARSING-GEOAPI" />
     </logger>
 
     <root level="INFO">
