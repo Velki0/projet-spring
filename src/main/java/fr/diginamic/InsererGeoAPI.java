@@ -39,7 +39,7 @@ public class InsererGeoAPI implements CommandLineRunner {
     @Autowired
     private IRegionMapper regionMapper;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("LoggerGeoAPI");
+    private static final Logger LOGGER = LoggerFactory.getLogger(InsererGeoAPI.class);
 
     public static void main(String[] args) {
 

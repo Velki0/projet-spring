@@ -25,11 +25,11 @@
         </encoder>
     </appender>
 
-    <logger name="fr.diginamic.services" level="INFO">
+    <logger name="fr.diginamic.services" level="INFO" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="LoggerGeoAPI" level="INFO">
+    <logger name="fr.diginamic" level="INFO">
         <appender-ref ref="FILE-PARSING-GEOAPI" />
     </logger>
 
