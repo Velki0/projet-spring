@@ -3,12 +3,17 @@ package fr.diginamic.services;
 import fr.diginamic.repositories.VilleRepository;
 import fr.diginamic.entites.Ville;
 import fr.diginamic.exceptions.VilleException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -16,6 +21,8 @@ public class VilleService implements IVilleService {
 
     @Autowired
     private VilleRepository villeRepository;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("LoggerRecensement");
 
     @Override
     public Page<Ville> getAllVilles(Integer page, Integer taille) {
@@ -127,8 +134,12 @@ public class VilleService implements IVilleService {
     @Override
     public void addVille(Ville ville) throws VilleException {
 
-        if (villeRepository.findByNom(ville.getNom()) == null) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (villeRepository.findByNom(ville.getNom()) == null && auth != null) {
+            ville.setUserMaj(auth.getName());
+            ville.setDateMaj(LocalDateTime.now());
             villeRepository.save(ville);
+            LOGGER.info("L'utilisateur {} a ajouté la ville avec l'id {}.", auth.getName(), ville.getId());
         } else {
            throw new VilleException(ville.getNom() + " existe déjà en base de données. Impossible de l'ajouter.");
         }
@@ -139,11 +150,15 @@ public class VilleService implements IVilleService {
     @Override
     public void updateVille(int id, Ville ville) throws VilleException {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Ville villeDB = villeRepository.findById(id);
-        if (villeDB != null) {
+        if (villeDB != null && auth != null) {
             villeDB.setNom(ville.getNom());
             villeDB.setPopulation(ville.getPopulation());
             villeDB.setDepartement(ville.getDepartement());
+            villeDB.setUserMaj(auth.getName());
+            villeDB.setDateMaj(LocalDateTime.now());
+            LOGGER.info("L'utilisateur {} a modifié la ville avec l'id {}.", auth.getName(), villeDB.getId());
         } else {
             throw new VilleException("La ville avec l'id " + id + " n'existe pas en base de données. Impossible de la modifier.");
         }
@@ -154,9 +169,11 @@ public class VilleService implements IVilleService {
     @Override
     public void deleteVille(int id) throws VilleException {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Ville villeDB = villeRepository.findById(id);
-        if (villeDB != null) {
+        if (villeDB != null && auth != null) {
             villeRepository.delete(villeDB);
+            LOGGER.info("L'utilisateur {} a supprimé la ville avec l'id {}.", auth.getName(), villeDB.getId());
         } else {
             throw new VilleException("La ville avec l'id " + id + " n'existe pas en base de données. Impossible de la supprimer.");
         }

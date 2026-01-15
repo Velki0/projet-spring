@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+import java.time.LocalDateTime;
+
 @Entity
 public class Ville {
 
@@ -29,6 +31,12 @@ public class Ville {
     @JoinColumn(name = "DEPARTEMENT_ID")
     private Departement departement;
 
+    @Column(name = "USER_MAJ")
+    private String userMaj;
+
+    @Column(name = "DATE_MAJ")
+    private LocalDateTime dateMaj;
+
     public Ville() {}
 
     public Ville(String codeVille, String nom, Integer population, Departement departement) {
@@ -45,10 +53,14 @@ public class Ville {
     public String getNom() { return nom; }
     public Integer getPopulation() { return population; }
     public Departement getDepartement() { return departement; }
+    public String getUserMaj() { return userMaj; }
+    public LocalDateTime getDateMaj() { return dateMaj; }
 
     public void setCodeVille(String codeVille) { this.codeVille = codeVille; }
     public void setNom(String nom) { this.nom = nom; }
     public void setPopulation(Integer population) { this.population = population; }
     public void setDepartement(Departement departement) { this.departement = departement; }
+    public void setUserMaj(String userMaj) { this.userMaj = userMaj; }
+    public void setDateMaj(LocalDateTime dateMaj) { this.dateMaj = dateMaj; }
 
 }

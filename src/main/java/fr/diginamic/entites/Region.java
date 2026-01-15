@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,6 +28,12 @@ public class Region {
     @OneToMany(mappedBy = "region")
     private Set<Departement> departements = new HashSet<>();
 
+    @Column(name = "USER_MAJ")
+    private String userMaj;
+
+    @Column(name = "DATE_MAJ")
+    private LocalDateTime dateMaj;
+
     public Region() {}
 
     public Region(String codeRegion, String nom) {
@@ -40,9 +47,13 @@ public class Region {
     public String getCodeRegion() { return codeRegion; }
     public String getNom() { return nom; }
     public Set<Departement> getDepartements() { return departements; }
+    public String getUserMaj() { return userMaj; }
+    public LocalDateTime getDateMaj() { return dateMaj; }
 
     public void setCodeRegion(String codeRegion) { this.codeRegion = codeRegion; }
     public void setNom(String nom) { this.nom = nom; }
     public void setDepartements(Set<Departement> departements) { this.departements = departements; }
+    public void setUserMaj(String userMaj) { this.userMaj = userMaj; }
+    public void setDateMaj(LocalDateTime dateMaj) { this.dateMaj = dateMaj; }
 
 }
